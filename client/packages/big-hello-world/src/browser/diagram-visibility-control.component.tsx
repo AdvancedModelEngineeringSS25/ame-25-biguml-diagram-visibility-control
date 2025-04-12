@@ -8,33 +8,33 @@
  **********************************************************************************/
 import { VSCodeContext } from '@borkdominik-biguml/big-components';
 import { useCallback, useContext, useEffect, useState, type ReactElement } from 'react';
-import { HelloWorldActionResponse, RequestHelloWorldAction } from '../common/index.js';
+import { DiagramVisibilityControlActionResponse, RequestDiagramVisibilityControlAction } from '../common/index.js';
 
 
-export function HelloWorld(): ReactElement {
+export function DiagramVisibilityControl(): ReactElement {
     const { listenAction, dispatchAction } = useContext(VSCodeContext);
     const [count, setCount] = useState(0);
 
     useEffect(() => {
         listenAction(action => {
-            if (HelloWorldActionResponse.is(action)) {
+            if (DiagramVisibilityControlActionResponse.is(action)) {
                 setCount(action.count);
             }
         });
     }, [listenAction]);
 
     const increase1 = useCallback(() => {
-        dispatchAction(RequestHelloWorldAction.create({ increase: 1 }));
+        dispatchAction(RequestDiagramVisibilityControlAction.create({ increase: 1 }));
     }, [dispatchAction]);
 
     const increase5 = useCallback(() => {
-        dispatchAction(RequestHelloWorldAction.create({ increase: 5 }));
+        dispatchAction(RequestDiagramVisibilityControlAction.create({ increase: 5 }));
     }, [dispatchAction]);
 
     return (
         <div>
-            <span>Hello World! {count}</span>
-            <button onClick={() => increase1()}>Increase 1</button>
+            <span>Diagram Visibility Control! {count}</span>
+            <button onClick={() => increase1()}>Increase 1 Test</button>
             <button onClick={() => increase5()}>Increase 5</button>
         </div>
     );

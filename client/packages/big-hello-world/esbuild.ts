@@ -22,7 +22,7 @@ const runner = new ESBuildRunner({
             assets: [
                 {
                     from: ['dist/**/*'],
-                    to: ['../../application/vscode/webviews/hello-world']
+                    to: ['../../application/vscode/webviews/diagram-visibility-control']
                 }
             ]
         })
