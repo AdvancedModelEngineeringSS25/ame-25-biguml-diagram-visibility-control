@@ -6,110 +6,109 @@
  *
  * SPDX-License-Identifier: MIT
  **********************************************************************************/
-import { VSCodeContext } from '@borkdominik-biguml/big-components';
-import { useCallback, useContext, useEffect, useState, type ReactElement } from 'react';
-import { DiagramVisibilityControlActionResponse, RequestDiagramVisibilityControlAction } from '../common/index.js';
+import { useState } from 'react';
+import type { Filter, Layer } from '../model/model.js';
+import { FilterDetailsView } from './FilterDetailsView.js';
+import { LayerDetailsView } from './LayerDetailsView.js';
+import { MainView } from './MainView.js';
 
+// Sample dummy data for testing
+const sampleLayers: Layer[] = [
+    {
+        id: '1',
+        name: 'Layer 1',
+        visible: true,
+        filters: [
+            { id: 'f1', type: 'type', types: ['property', 'relation'] },
+            { id: 'f2', type: 'pattern', pattern: 'hello' },
+            { id: 'f3', type: 'selection', elements: [1, 5, 7] }
+        ]
+    },
+    {
+        id: '2',
+        name: 'Layer 2',
+        visible: false,
+        filters: [
+            { id: 'f4', type: 'type', types: ['class'] }
+        ]
+    }
+];
 
-export function DiagramVisibilityControl(): ReactElement {
-    const { listenAction, dispatchAction } = useContext(VSCodeContext);
-    const [count, setCount] = useState(0);
+export function DiagramVisibilityControl() {
+    const [layers, setLayers] = useState<Layer[]>(sampleLayers);
+    const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
+    const [selectedFilterId, setSelectedFilterId] = useState<string | null>(null);
 
-    // TODO remove hardcoded list
-    const [items] = useState([ 
-        { id: 1, name: 'Diagram 1' },
-        { id: 2, name: 'Diagram 2' },
-        { id: 3, name: 'Diagram 3' }
-    ]);
+    const selectedLayer = layers.find(l => l.id === selectedLayerId) || null;
+    const selectedFilter: Filter | null = selectedLayer?.filters.find(f => f.id === selectedFilterId) || null;
 
-    useEffect(() => {
-        listenAction(action => {
-            if (DiagramVisibilityControlActionResponse.is(action)) {
-                setCount(action.count);
-            }
-        });
-    }, [listenAction]);
-
-/*
-    // TODO remove all count related code
-    const increase1 = useCallback(() => {
-        dispatchAction(RequestDiagramVisibilityControlAction.create({ increase: 1 }));
-    }, [dispatchAction]);
-
-    const increase5 = useCallback(() => {
-        dispatchAction(RequestDiagramVisibilityControlAction.create({ increase: 5 }));
-    }, [dispatchAction]);
-*/
-
-    const goToDetails = (id: number) => {
-        console.log('goToDetails', id);
+    const goBackToLayers = () => {
+        setSelectedLayerId(null);
+        setSelectedFilterId(null);
     };
 
-    const moveUp = useCallback((id: number) => {
-        console.log('moveUp', id);
-        dispatchAction(RequestDiagramVisibilityControlAction.create({ increase: 1 }));
-    }, [dispatchAction]);
-    
-    const moveDown = useCallback((id: number) => {
-        console.log('moveDown', id);
-        dispatchAction(RequestDiagramVisibilityControlAction.create({ increase: 1 }));
-    }, [dispatchAction]);
+    const goBackToLayer = () => {
+        setSelectedFilterId(null);
+    };
 
-    const toggleActive = useCallback((id: number) => {
-        console.log('toggleActive', id);
-        dispatchAction(RequestDiagramVisibilityControlAction.create({ increase: 1 }));
-    }, [dispatchAction]);
+    if (selectedFilter && selectedLayer) {
+        return <FilterDetailsView filter={selectedFilter} onBack={goBackToLayer} />;
+    }
 
-    const uploadConfig = useCallback(() => {
-        console.log('uploadConfig');
-        dispatchAction(RequestDiagramVisibilityControlAction.create({ increase: 1 }));
-    }, [dispatchAction]);
+    if (selectedLayer) {
+        return (
+            <LayerDetailsView
+                layer={selectedLayer}
+                onBack={goBackToLayers}
+                onFilterSelect={setSelectedFilterId}
+            />
+        );
+    }
 
-    const saveConfig = useCallback(() => {
-        console.log('saveConfig');
-        dispatchAction(RequestDiagramVisibilityControlAction.create({ increase: 1 }));
-    }, [dispatchAction]);
+    const moveUp = (id: string) => {
+        console.log('moveUp clicked', id);
+    };
 
-    const recomputeAll = useCallback(() => {
-        console.log('recomputeAll');
-        dispatchAction(RequestDiagramVisibilityControlAction.create({ increase: 1 }));
-    }, [dispatchAction]);
+    const moveDown = (id: string) => {
+        console.log('moveDown clicked', id);
+    };
+
+    const toggleActive = (id: string) => {
+        console.log('toggleActive clicked', id);
+        setLayers(prevLayers =>
+            prevLayers.map(layer =>
+                layer.id === id ? { ...layer, visible: !layer.visible } : layer
+            )
+        );
+    };
+
+    const uploadConfig = () => {
+        console.log('uploadConfig clicked');
+    };
+
+    const saveConfig = () => {
+        console.log('saveConfig clicked');
+    };
+
+    const recomputeAll = () => {
+        console.log('recomputeAll clicked');
+    };
+
+    const addLayer = () => {
+        console.log('addLayer clicked');
+    };
 
     return (
-        <div>
-            <span>Diagram Visibility Control! {count}</span>
-
-            <div>
-                {items.map(item => (
-                    <div key={item.id}>
-                        <span>{item.name}</span>
-                        <div>
-                            <button onClick={() => moveUp(item.id)}>{'↑'}</button>
-                            <button onClick={() => moveDown(item.id)}>{'↓'}</button>
-                            <button onClick={() => toggleActive(item.id)}>{'>'}</button>
-                            <button onClick={() => goToDetails(item.id)}>{'>'}</button>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            <footer>
-                <div>
-                    <button onClick={() => uploadConfig()}>
-                        <img src="/assets/upload.svg" alt="Upload" className="w-6 h-6" />
-                    </button>
-                    <button onClick={() => saveConfig()}>
-                        <img src="./assets/upload.svg" alt="Upload"/>
-                    </button>
-                    <button onClick={() => recomputeAll()}>{'↺'}</button>
-                </div>
-
-                <div>
-                    <button>
-                        + Add
-                    </button>
-                </div>
-            </footer>
-        </div>
+        <MainView
+            layers={layers}
+            moveUp={moveUp}
+            moveDown={moveDown}
+            toggleActive={toggleActive}
+            goToDetails={setSelectedLayerId}
+            uploadConfig={uploadConfig}
+            saveConfig={saveConfig}
+            recomputeAll={recomputeAll}
+            addLayer={addLayer}
+        />
     );
 }
