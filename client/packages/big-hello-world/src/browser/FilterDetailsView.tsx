@@ -6,26 +6,36 @@
  *
  * SPDX-License-Identifier: MIT
  **********************************************************************************/
-import { VSCodeButton } from '@vscode/webview-ui-toolkit/react/index.js';
+import { VSCodeButton, VSCodeDivider, VSCodeTextField } from '@vscode/webview-ui-toolkit/react/index.js';
 import type { Filter } from '../model/model.js';
-import { TypeFilterEditor } from './TypeFilterEditor.js';
 import { PatternFilterEditor } from './PatternFilterEditor.js';
 import { SelectionFilterEditor } from './SelectionFilterEditor.js';
+import { TypeFilterEditor } from './TypeFilterEditor.js';
 
 export function FilterDetailsView({
     filter,
-    onBack
+    onBack,
+    toggleSelectedType,
+    deleteSelectedElement,
+    startSelection
 }: {
     filter: Filter;
     onBack: () => void;
+    toggleSelectedType: (id: string) => void;
+    deleteSelectedElement: (id: string) => void;
+    startSelection: (id: string) => void;
 }) {
     return (
         <div className="flex flex-col gap-4">
-            <VSCodeButton onClick={onBack}>Back</VSCodeButton>
-            <h2>Edit Filter: {filter.type}</h2>
-            {filter.type === 'type' && <TypeFilterEditor filter={filter} />}
-            {filter.type === 'pattern' && <PatternFilterEditor filter={filter} />}
-            {filter.type === 'selection' && <SelectionFilterEditor filter={filter} />}
+            <VSCodeButton slot='anchor' appearance='icon' onClick={onBack}>
+                <div className='codicon codicon-chevron-left'></div>
+            </VSCodeButton>
+            <h2>Edit Filter</h2>
+            <VSCodeTextField value={filter.name} />
+            <VSCodeDivider />
+            {filter.type === 'type' && <TypeFilterEditor filter={filter} toggleSelectedType={toggleSelectedType} />}
+            {filter.type === 'pattern' && <PatternFilterEditor filter={filter} toggleSelectedType={toggleSelectedType} />}
+            {filter.type === 'selection' && <SelectionFilterEditor filter={filter} deleteSelectedElement={deleteSelectedElement} startSelection={startSelection} />}
         </div>
     );
 }

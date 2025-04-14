@@ -6,17 +6,27 @@
  *
  * SPDX-License-Identifier: MIT
  **********************************************************************************/
+import { BigCheckbox } from '@borkdominik-biguml/big-components';
 import type { TypeFilter } from '../model/model.js';
+import { ALL_TYPES } from '../model/model.js';
 
-export function TypeFilterEditor({ filter }: { filter: TypeFilter }) {
+export function TypeFilterEditor({ filter, toggleSelectedType }: { 
+    filter: TypeFilter,
+    toggleSelectedType: (id: string) => void;
+}) {
     return (
         <div>
             <label>Types:</label>
-            <ul>
-                {filter.types.map((t, i) => (
-                    <li key={i}>{t}</li>
+            <div>
+                {ALL_TYPES.map((type, index) => (
+                    <div key={index}>
+                        <BigCheckbox 
+                            label={type} 
+                            value={filter.types.includes(type)} 
+                            onDidChangeValue={() => toggleSelectedType(type)}></BigCheckbox>
+                    </div>
                 ))}
-            </ul>
+            </div>
         </div>
     );
 }

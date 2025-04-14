@@ -6,14 +6,30 @@
  *
  * SPDX-License-Identifier: MIT
  **********************************************************************************/
-import type { PatternFilter } from '../model/model.js';
+import { BigCheckbox } from '@borkdominik-biguml/big-components';
 import { VSCodeTextField } from '@vscode/webview-ui-toolkit/react/index.js';
+import type { PatternFilter } from '../model/model.js';
+import { ALL_TYPES } from '../model/model.js';
 
-export function PatternFilterEditor({ filter }: { filter: PatternFilter }) {
+export function PatternFilterEditor({ filter, toggleSelectedType }: {
+    filter: PatternFilter,
+    toggleSelectedType: (id: string) => void;
+}) {
     return (
         <div>
             <label>Pattern:</label>
             <VSCodeTextField value={filter.pattern} />
+            <label>Types:</label>
+            <div>
+                {ALL_TYPES.map((type, index) => (
+                    <div key={index}>
+                        <BigCheckbox
+                            label={type} 
+                            value={filter.types.includes(type)}
+                            onDidChangeValue={() => toggleSelectedType(type)}></BigCheckbox>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }
