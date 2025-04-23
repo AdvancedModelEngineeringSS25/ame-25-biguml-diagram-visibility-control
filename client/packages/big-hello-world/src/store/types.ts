@@ -5,8 +5,8 @@
  * terms of the MIT License which is available at https://opensource.org/licenses/MIT.
  *
  * SPDX-License-Identifier: MIT
- **********************************************************************************/
-
+ 
+**********************************************************************************/
 interface FilterBase {
     id: string;
     name: string;
@@ -41,5 +41,3 @@ export interface Layer {
     groupId?: string;
     styleClass?: string;
 }
-
-export const ALL_TYPES = ['class', 'property', 'relation', 'method', 'interface'];

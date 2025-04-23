@@ -1,0 +1,134 @@
+/**********************************************************************************
+ * Copyright (c) 2025 borkdominik and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the MIT License which is available at https://opensource.org/licenses/MIT.
+ *
+ * SPDX-License-Identifier: MIT
+ **********************************************************************************/
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import type { Filter, Layer, SelectionFilter } from '../model/model.js';
+
+interface LayerState {
+    layers: Layer[];
+    configuration: string;
+
+    addLayer: (layer: Omit<Layer, 'id' | 'zIndex'> & Partial<Pick<Layer, 'id' | 'zIndex'>>) => void;
+    updateLayer: (id: string, patch: Partial<Omit<Layer, 'id'>>) => void;
+    deleteLayer: (id: string) => void;
+    reorderLayers: (from: number, to: number) => void;
+    toggleLayer: (id: string) => void;
+
+    addFilter: (layerId: string, f: Filter) => void;
+    updateFilter: (layerId: string, idx: number, f: Filter) => void;
+    deleteFilter: (layerId: string, idx: number) => void;
+
+    setConfiguration: (name: string) => void;
+    getVisibleElementIds: () => string[];
+}
+
+export const useLayerStore = create<LayerState>()(
+    persist(
+        (set, get) => ({
+            layers: [],
+            configuration: 'default',
+
+            addLayer: layer => {
+                const id = layer.id ?? crypto.randomUUID();
+                const zIndex = layer.zIndex ?? get().layers.length;
+                const newLayer: Layer = {
+                    ...layer,
+                    id,
+                    zIndex,
+                    visible: layer.visible ?? true,
+                    filters: layer.filters ?? []
+                };
+                set(state => ({
+                    layers: [...state.layers, newLayer]
+                }));
+            },
+
+            updateLayer: (id, patch) => {
+                set(state => ({
+                    layers: state.layers.map(l => (l.id === id ? { ...l, ...patch } : l))
+                }));
+            },
+
+            deleteLayer: id => {
+                set(state => ({
+                    layers: state.layers.filter(l => l.id !== id)
+                }));
+            },
+
+            reorderLayers: (from, to) => {
+                set(state => {
+                    const layers = [...state.layers];
+                    const [moved] = layers.splice(from, 1);
+                    layers.splice(to, 0, moved);
+                    layers.forEach((l, i) => (l.zIndex = i));
+                    return { layers };
+                });
+            },
+
+            toggleLayer: id => {
+                set(state => ({
+                    layers: state.layers.map(l => (l.id === id ? { ...l, visible: !l.visible } : l))
+                }));
+            },
+
+            addFilter: (layerId, f) => {
+                set(state => ({
+                    layers: state.layers.map(l => (l.id === layerId ? { ...l, filters: [...l.filters, f] } : l))
+                }));
+            },
+
+            updateFilter: (layerId, idx, f) => {
+                set(state => ({
+                    layers: state.layers.map(l =>
+                        l.id === layerId
+                            ? {
+                                  ...l,
+                                  filters: l.filters.map((old, i) => (i === idx ? f : old))
+                              }
+                            : l
+                    )
+                }));
+            },
+
+            deleteFilter: (layerId, idx) => {
+                set(state => ({
+                    layers: state.layers.map(l =>
+                        l.id === layerId
+                            ? {
+                                  ...l,
+                                  filters: l.filters.filter((_, i) => i !== idx)
+                              }
+                            : l
+                    )
+                }));
+            },
+
+            setConfiguration: name => set({ configuration: name }),
+
+            getVisibleElementIds: () => {
+                const ordered = get()
+                    .layers.filter(l => l.visible)
+                    .sort((a, b) => a.zIndex - b.zIndex);
+
+                const ids = new Set<string>();
+                for (const layer of ordered) {
+                    for (const f of layer.filters) {
+                        if (f.type === 'selection') {
+                            (f as SelectionFilter).elements.forEach(id => ids.add(id));
+                        }
+                    }
+                }
+                return [...ids];
+            }
+        }),
+        {
+            name: 'diagram-layer-state'
+        }
+    )
+);

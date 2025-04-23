@@ -11,10 +11,7 @@ import { VSCodeTextField } from '@vscode/webview-ui-toolkit/react/index.js';
 import type { PatternFilter } from '../model/model.js';
 import { ALL_TYPES } from '../model/model.js';
 
-export function PatternFilterEditor({ filter, toggleSelectedType }: {
-    filter: PatternFilter,
-    toggleSelectedType: (id: string) => void;
-}) {
+export function PatternFilterEditor({ filter, toggleSelectedType }: { filter: PatternFilter; toggleSelectedType: (id: string) => void }) {
     return (
         <div>
             <label>Pattern:</label>
@@ -24,9 +21,10 @@ export function PatternFilterEditor({ filter, toggleSelectedType }: {
                 {ALL_TYPES.map((type, index) => (
                     <div key={index}>
                         <BigCheckbox
-                            label={type} 
-                            value={filter.types.includes(type)}
-                            onDidChangeValue={() => toggleSelectedType(type)}></BigCheckbox>
+                            label={type}
+                            value={(filter.types ?? []).includes(type)}
+                            onDidChangeValue={() => toggleSelectedType(type)}
+                        ></BigCheckbox>
                     </div>
                 ))}
             </div>

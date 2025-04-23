@@ -7,35 +7,18 @@
  * SPDX-License-Identifier: MIT
  **********************************************************************************/
 import { useState } from 'react';
-import type { Filter, Layer } from '../model/model.js';
+import type { Filter } from '../model/model.js';
+import { seedStore } from '../store/devSeed.js';
+import { useLayerStore } from '../store/layerStore.js';
 import { FilterDetailsView } from './FilterDetailsView.js';
 import { LayerDetailsView } from './LayerDetailsView.js';
 import { MainView } from './MainView.js';
-
-// Sample dummy data for testing
-const sampleLayers: Layer[] = [
-    {
-        id: '1',
-        name: 'Layer 1',
-        visible: true,
-        filters: [
-            { id: 'f1', name:'filter 1', type: 'type', types: ['property', 'relation'] },
-            { id: 'f2', name:'filter 2', type: 'pattern', pattern: 'hello', types: ['property']},
-            { id: 'f3', name:'filter 3', type: 'selection', elements: ["1", "5", "7"] }
-        ]
-    },
-    {
-        id: '2',
-        name: 'Layer 2',
-        visible: false,
-        filters: [
-            { id: 'f4', name:'filter 4', type: 'type', types: ['class'] }
-        ]
-    }
-];
-
 export function DiagramVisibilityControl() {
-    const [layers, setLayers] = useState<Layer[]>(sampleLayers);
+    seedStore();
+    const layers = useLayerStore(s => s.layers);
+    // const storeAddLayer = useLayerStore(s => s.addLayer);
+    const storeToggle = useLayerStore(s => s.toggleLayer);
+    const storeReorder = useLayerStore(s => s.reorderLayers);
     const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
     const [selectedFilterId, setSelectedFilterId] = useState<string | null>(null);
 
@@ -48,6 +31,9 @@ export function DiagramVisibilityControl() {
 
     const moveUp = (id: string) => {
         console.log('moveUp clicked', id);
+        const from = layers.findIndex(l => l.id === id);
+        if (from <= 0) return; // already top or not found
+        storeReorder(from, from - 1);
     };
 
     const moveDown = (id: string) => {
@@ -56,11 +42,8 @@ export function DiagramVisibilityControl() {
 
     const toggleActive = (id: string) => {
         console.log('toggleActive clicked', id);
-        setLayers(prevLayers =>
-            prevLayers.map(layer =>
-                layer.id === id ? { ...layer, visible: !layer.visible } : layer
-            )
-        );
+        storeToggle(id);
+        // setLayers(prevLayers => prevLayers.map(layer => (layer.id === id ? { ...layer, visible: !layer.visible } : layer)));
     };
 
     const uploadConfig = () => {
@@ -101,7 +84,6 @@ export function DiagramVisibilityControl() {
         console.log('addFilter clicked');
     };
 
-
     /***********************
     Filter Details Functions
     ***********************/
@@ -123,7 +105,6 @@ export function DiagramVisibilityControl() {
         console.log('startSelection clicked', id);
     };
 
-
     /*********
     Navigation
     *********/
@@ -142,14 +123,16 @@ export function DiagramVisibilityControl() {
     }
 
     if (selectedFilter && selectedLayer) {
-        console.log("returning FilterDetailsView");
-        return <FilterDetailsView 
-            filter={selectedFilter} 
-            onBack={goBackToLayer} 
-            toggleSelectedType={toggleSelectedType}
-            deleteSelectedElement={deleteSelectedElement}
-            startSelection={startSelection}
-        />;
+        console.log('returning FilterDetailsView');
+        return (
+            <FilterDetailsView
+                filter={selectedFilter}
+                onBack={goBackToLayer}
+                toggleSelectedType={toggleSelectedType}
+                deleteSelectedElement={deleteSelectedElement}
+                startSelection={startSelection}
+            />
+        );
     }
 
     return (

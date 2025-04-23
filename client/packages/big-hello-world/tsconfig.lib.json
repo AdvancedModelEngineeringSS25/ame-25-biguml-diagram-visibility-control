@@ -6,5 +6,5 @@
     "outDir": "lib",
     "rootDir": "src"
   },
-  "include": ["src/browser", "src/glsp-client", "src/web"]
+  "include": ["src/browser", "src/glsp-client", "src/web", "src/store"]
 }
