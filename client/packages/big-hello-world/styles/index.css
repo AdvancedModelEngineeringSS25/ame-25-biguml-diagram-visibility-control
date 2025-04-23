@@ -11,3 +11,10 @@ div {
     display: flex;
     flex-direction: column;
 }
+
+#layer-style {
+    display: flex;
+    flex-direction: row;
+    gap: 4px; /* optional: spacing between buttons */
+    align-items: center; /* optional: vertical alignment */
+}
