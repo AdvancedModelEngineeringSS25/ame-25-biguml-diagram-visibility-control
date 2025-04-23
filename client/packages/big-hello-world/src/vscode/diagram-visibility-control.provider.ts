@@ -8,18 +8,18 @@
  **********************************************************************************/
 import { BIGReactWebview } from '@borkdominik-biguml/big-vscode-integration/vscode';
 import { inject, injectable, postConstruct } from 'inversify';
-import { HelloWorldActionResponse, RequestHelloWorldAction } from '../common/hello-world.action.js';
+import { DiagramVisibilityControlActionResponse, RequestDiagramVisibilityControlAction } from '../common/diagram-visibility-control.action.js';
 
-export const HelloWorldViewId = Symbol('HelloWorldViewId');
+export const DiagramVisibilityControlViewId = Symbol('DiagramVisibilityControlViewId');
 
 @injectable()
-export class HelloWorldProvider extends BIGReactWebview {
-    @inject(HelloWorldViewId)
+export class DiagramVisibilityControlProvider extends BIGReactWebview {
+    @inject(DiagramVisibilityControlViewId)
     viewId: string;
 
-    protected override cssPath = ['hello-world', 'bundle.css'];
-    protected override jsPath = ['hello-world', 'bundle.js'];
-    protected readonly actionCache = this.actionListener.createCache([HelloWorldActionResponse.KIND]);
+    protected override cssPath = ['diagram-visibility-control', 'bundle.css'];
+    protected override jsPath = ['diagram-visibility-control', 'bundle.js'];
+    protected readonly actionCache = this.actionListener.createCache([DiagramVisibilityControlActionResponse.KIND]);
 
     @postConstruct()
     protected override init(): void {
@@ -43,11 +43,11 @@ export class HelloWorldProvider extends BIGReactWebview {
             }),
             this.connectionManager.onNoActiveClient(() => {
                 // Send a message to the webview when there is no active client
-                this.webviewConnector.dispatch(HelloWorldActionResponse.create());
+                this.webviewConnector.dispatch(DiagramVisibilityControlActionResponse.create());
             }),
             this.connectionManager.onNoConnection(() => {
                 // Send a message to the webview when there is no glsp client
-                this.webviewConnector.dispatch(HelloWorldActionResponse.create());
+                this.webviewConnector.dispatch(DiagramVisibilityControlActionResponse.create());
             }),
             this.modelState.onDidChangeModelState(() => {
                 this.requestCount();
@@ -57,7 +57,7 @@ export class HelloWorldProvider extends BIGReactWebview {
 
     protected requestCount(): void {
         this.actionDispatcher.dispatch(
-            RequestHelloWorldAction.create({
+            RequestDiagramVisibilityControlAction.create({
                 increase: 0
             })
         );

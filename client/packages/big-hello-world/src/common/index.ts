@@ -7,4 +7,4 @@
  * SPDX-License-Identifier: MIT
  **********************************************************************************/
 
-export * from './hello-world.action.js';
+export * from './diagram-visibility-control.action.js';

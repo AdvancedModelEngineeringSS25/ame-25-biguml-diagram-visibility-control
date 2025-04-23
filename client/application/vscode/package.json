@@ -264,8 +264,8 @@
           "when": "bigUML.isRunning"
         },
         {
-          "id": "bigUML.panel.hello-world",
-          "name": "Hello World",
+          "id": "bigUML.panel.diagram-visibility-control",
+          "name": "Diagram Visibility Control",
           "type": "webview",
           "when": "bigUML.isRunning"
         }
@@ -288,7 +288,7 @@
     "onView:bigUML.outlineView"
   ],
   "dependencies": {
-    "@borkdominik-biguml/big-hello-world": "*",
+    "@borkdominik-biguml/big-diagram-visibility-control": "*",
     "@borkdominik-biguml/big-minimap": "*",
     "@borkdominik-biguml/big-outline": "*",
     "@borkdominik-biguml/big-property-palette": "*",

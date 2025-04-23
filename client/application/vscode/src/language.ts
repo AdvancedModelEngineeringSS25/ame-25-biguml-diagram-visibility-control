@@ -40,7 +40,7 @@ export const VSCodeSettings = {
     minimap: {
         viewId: 'bigUML.panel.minimap'
     },
-    helloWorld: {
-        viewId: 'bigUML.panel.hello-world'
+    DiagramVisibilityControl: {
+        viewId: 'bigUML.panel.diagram-visibility-control'
     }
 } as const;

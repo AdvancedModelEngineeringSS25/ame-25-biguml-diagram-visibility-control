@@ -53,7 +53,7 @@
     "watch": "concurrently --kill-others 'npm run compile -- --watch' 'npm run bundle -- --watch'"
   },
   "dependencies": {
-    "@borkdominik-biguml/big-hello-world": "*",
+    "@borkdominik-biguml/big-diagram-visibility-control": "*",
     "@borkdominik-biguml/big-minimap": "*",
     "@borkdominik-biguml/big-outline": "*",
     "@borkdominik-biguml/big-property-palette": "*",
