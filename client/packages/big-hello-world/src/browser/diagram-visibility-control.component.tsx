@@ -16,7 +16,7 @@ import { MainView } from './MainView.js';
 export function DiagramVisibilityControl() {
     seedStore();
     const layers = useLayerStore(s => s.layers);
-    // const storeAddLayer = useLayerStore(s => s.addLayer);
+    const storeAddLayer = useLayerStore(s => s.addLayer);
     const storeToggle = useLayerStore(s => s.toggleLayer);
     const storeReorder = useLayerStore(s => s.reorderLayers);
     const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
@@ -38,12 +38,14 @@ export function DiagramVisibilityControl() {
 
     const moveDown = (id: string) => {
         console.log('moveDown clicked', id);
+        const from = layers.findIndex(l => l.id === id);
+        if (from < 0 || from >= layers.length - 1) return; // already bottom or not found
+        storeReorder(from, from + 1);
     };
 
     const toggleActive = (id: string) => {
         console.log('toggleActive clicked', id);
         storeToggle(id);
-        // setLayers(prevLayers => prevLayers.map(layer => (layer.id === id ? { ...layer, visible: !layer.visible } : layer)));
     };
 
     const uploadConfig = () => {
@@ -60,6 +62,7 @@ export function DiagramVisibilityControl() {
 
     const addLayer = () => {
         console.log('addLayer clicked');
+        storeAddLayer();
     };
 
     /**********************
