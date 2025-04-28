@@ -14,7 +14,7 @@ interface LayerState {
     layers: Layer[];
     configuration: string;
 
-    addLayer: (layer: Omit<Layer, 'id' | 'zIndex'> & Partial<Pick<Layer, 'id' | 'zIndex'>>) => void;
+    addLayer: () => void;
     updateLayer: (id: string, patch: Partial<Omit<Layer, 'id'>>) => void;
     deleteLayer: (id: string) => void;
     reorderLayers: (from: number, to: number) => void;
@@ -34,15 +34,18 @@ export const useLayerStore = create<LayerState>()(
             layers: [],
             configuration: 'default',
 
-            addLayer: layer => {
-                const id = layer.id ?? crypto.randomUUID();
-                const zIndex = layer.zIndex ?? get().layers.length;
+            addLayer: () => {
+                const id = crypto.randomUUID();
+                // find max zIndex + 1 in the current layers
+                // if zIndex is set, use it
+                const name = `Layer ${get().layers.length + 1}`;
+                const zIndex = get().layers.length + 1;
                 const newLayer: Layer = {
-                    ...layer,
                     id,
+                    name,
                     zIndex,
-                    visible: layer.visible ?? true,
-                    filters: layer.filters ?? []
+                    visible: true,
+                    filters: []
                 };
                 set(state => ({
                     layers: [...state.layers, newLayer]
