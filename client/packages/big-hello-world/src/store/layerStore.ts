@@ -21,8 +21,8 @@ interface LayerState {
     toggleLayer: (id: string) => void;
 
     addFilter: (layerId: string, f: Filter) => void;
-    updateFilter: (layerId: string, idx: number, f: Filter) => void;
-    deleteFilter: (layerId: string, idx: number) => void;
+    updateFilter: (layerId: string, filterId: string, f: Filter) => void;
+    deleteFilter: (layerId: string, filterId: string) => void;
 
     setConfiguration: (name: string) => void;
     getVisibleElementIds: () => string[];
@@ -39,7 +39,7 @@ export const useLayerStore = create<LayerState>()(
                 // find max zIndex + 1 in the current layers
                 // if zIndex is set, use it
                 const name = `Layer ${get().layers.length + 1}`;
-                const zIndex = get().layers.length + 1;
+                const zIndex = get().layers.length + 1; //TODO set highest value plus 1
                 const newLayer: Layer = {
                     id,
                     name,
@@ -86,26 +86,26 @@ export const useLayerStore = create<LayerState>()(
                 }));
             },
 
-            updateFilter: (layerId, idx, f) => {
+            updateFilter: (layerId, filterId, f) => {
                 set(state => ({
                     layers: state.layers.map(l =>
                         l.id === layerId
                             ? {
                                   ...l,
-                                  filters: l.filters.map((old, i) => (i === idx ? f : old))
+                                  filters: l.filters.map((old, i) => (i !== Number(filterId) ? old : f))
                               }
                             : l
                     )
                 }));
             },
 
-            deleteFilter: (layerId, idx) => {
+            deleteFilter: (layerId, filterId) => {
                 set(state => ({
                     layers: state.layers.map(l =>
                         l.id === layerId
                             ? {
                                   ...l,
-                                  filters: l.filters.filter((_, i) => i !== idx)
+                                  filters: l.filters.filter((_, i) => i !== Number(filterId))
                               }
                             : l
                     )
