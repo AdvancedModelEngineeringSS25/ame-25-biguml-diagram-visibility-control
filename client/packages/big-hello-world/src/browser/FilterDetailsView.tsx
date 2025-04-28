@@ -15,27 +15,37 @@ import { TypeFilterEditor } from './TypeFilterEditor.js';
 export function FilterDetailsView({
     filter,
     onBack,
+    onChangeName,
     toggleSelectedType,
     deleteSelectedElement,
     startSelection
 }: {
     filter: Filter;
     onBack: () => void;
+    onChangeName: (name: string) => void;
     toggleSelectedType: (id: string) => void;
     deleteSelectedElement: (id: string) => void;
     startSelection: (id: string) => void;
 }) {
     return (
-        <div className="flex flex-col gap-4">
+        <div className='flex flex-col gap-4'>
             <VSCodeButton slot='anchor' appearance='icon' onClick={onBack}>
                 <div className='codicon codicon-chevron-left'></div>
             </VSCodeButton>
             <h2>Edit Filter</h2>
-            <VSCodeTextField value={filter.name} />
+            <VSCodeTextField
+                onChange={e => {
+                    const newValue = (e.target as HTMLInputElement).value;
+                    onChangeName(newValue);
+                }}
+                value={filter.name}
+            />
             <VSCodeDivider />
             {filter.type === 'type' && <TypeFilterEditor filter={filter} toggleSelectedType={toggleSelectedType} />}
             {filter.type === 'pattern' && <PatternFilterEditor filter={filter} toggleSelectedType={toggleSelectedType} />}
-            {filter.type === 'selection' && <SelectionFilterEditor filter={filter} deleteSelectedElement={deleteSelectedElement} startSelection={startSelection} />}
+            {filter.type === 'selection' && (
+                <SelectionFilterEditor filter={filter} deleteSelectedElement={deleteSelectedElement} startSelection={startSelection} />
+            )}
         </div>
     );
 }

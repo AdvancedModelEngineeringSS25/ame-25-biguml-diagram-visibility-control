@@ -23,7 +23,7 @@ export function LayerDetailsView({
     changeLayerName: (id: string, name: string) => void;
     deleteFilter: (layerId: string, filderId: string) => void;
     deleteLayer: (id: string) => void;
-    addFilter: () => void;
+    addFilter: (layerId: string) => void;
     onFilterSelect: (id: string) => void;
 }) {
     return (
@@ -68,7 +68,7 @@ export function LayerDetailsView({
                     </VSCodeButton>
                 </div>
                 <div id='primary-footer-button'>
-                    <VSCodeButton slot='anchor' appearance='icon' onClick={addFilter}>
+                    <VSCodeButton slot='anchor' appearance='icon' onClick={() => addFilter(layer.id)}>
                         <div className='codicon codicon-add'></div>
                     </VSCodeButton>
                 </div>

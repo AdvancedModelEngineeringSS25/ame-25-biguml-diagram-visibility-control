@@ -20,7 +20,7 @@ interface LayerState {
     reorderLayers: (from: number, to: number) => void;
     toggleLayer: (id: string) => void;
 
-    addFilter: (layerId: string, f: Filter) => void;
+    addFilter: (layerId: string) => void;
     updateFilter: (layerId: string, filterId: string, f: Filter) => void;
     deleteFilter: (layerId: string, filterId: string) => void;
 
@@ -80,7 +80,14 @@ export const useLayerStore = create<LayerState>()(
                 }));
             },
 
-            addFilter: (layerId, f) => {
+            addFilter: layerId => {
+                const f: Filter = {
+                    id: crypto.randomUUID(),
+                    name: `Filter ${(get().layers.find(l => l.id == layerId)?.filters.length ?? 0) + 1} `,
+                    type: 'type',
+                    types: []
+                };
+
                 set(state => ({
                     layers: state.layers.map(l => (l.id === layerId ? { ...l, filters: [...l.filters, f] } : l))
                 }));
@@ -92,7 +99,7 @@ export const useLayerStore = create<LayerState>()(
                         l.id === layerId
                             ? {
                                   ...l,
-                                  filters: l.filters.map((old, i) => (i !== Number(filterId) ? old : f))
+                                  filters: l.filters.map(old => (old.id !== filterId ? old : f))
                               }
                             : l
                     )
@@ -105,7 +112,7 @@ export const useLayerStore = create<LayerState>()(
                         l.id === layerId
                             ? {
                                   ...l,
-                                  filters: l.filters.filter((_, i) => i !== Number(filterId))
+                                  filters: l.filters.filter(filter => filter.id !== filterId)
                               }
                             : l
                     )
