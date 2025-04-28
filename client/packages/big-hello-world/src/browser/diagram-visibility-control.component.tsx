@@ -20,6 +20,7 @@ export function DiagramVisibilityControl() {
     const storeReorder = useLayerStore(s => s.reorderLayers);
     const storeDeleteLayer = useLayerStore(s => s.deleteLayer);
     const storeUpdateLayer = useLayerStore(s => s.updateLayer);
+    const storeAddFilter = useLayerStore(s => s.addFilter);
     const storeDeleteFilter = useLayerStore(s => s.deleteFilter);
     const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
     const [selectedFilterId, setSelectedFilterId] = useState<string | null>(null);
@@ -87,17 +88,26 @@ export function DiagramVisibilityControl() {
         storeUpdateLayer(id, { name });
     };
 
-    const addFilter = () => {
-        console.log('addFilter clicked');
-    };
-
-    const deleteFilter = (layerId: string, filterId: string) => {
-        storeDeleteFilter(layerId, filterId);
-    };
-
     /***********************
     Filter Details Functions
     ***********************/
+
+    const addFilter = (layerId: string) => {
+        console.log('addFilter clicked');
+        storeAddFilter(layerId);
+    };
+
+    const deleteFilter = (layerId: string, filterId: string) => {
+        console.log('deleteFilter clicked', layerId, filterId);
+        storeDeleteFilter(layerId, filterId);
+    };
+
+    const changeFilterName = (layerId: string, filterId: string, name: string) => {
+        console.log('changeFilterName clicked', layerId, filterId, name);
+        storeUpdateLayer(layerId, {
+            filters: selectedLayer?.filters.map(f => (f.id === filterId ? { ...f, name } : f)) || []
+        });
+    };
 
     const goBackToLayer = () => {
         console.log('goBackToLayer clicked');
@@ -140,6 +150,7 @@ export function DiagramVisibilityControl() {
             <FilterDetailsView
                 filter={selectedFilter}
                 onBack={goBackToLayer}
+                onChangeName={name => changeFilterName(selectedLayer.id, selectedFilter.id, name)}
                 toggleSelectedType={toggleSelectedType}
                 deleteSelectedElement={deleteSelectedElement}
                 startSelection={startSelection}
