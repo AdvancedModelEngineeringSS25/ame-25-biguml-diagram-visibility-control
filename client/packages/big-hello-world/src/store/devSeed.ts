@@ -6,8 +6,8 @@
  *
  * SPDX-License-Identifier: MIT
  **********************************************************************************/
+import { type Layer } from '../model/model.js';
 import { useLayerStore } from './layerStore.js';
-import { type Layer } from './types.js';
 
 // development-only seed ---------------------------------
 const sampleLayers: Layer[] = [

@@ -17,7 +17,10 @@ import {
 } from '@borkdominik-biguml/big-vscode-integration/vscode';
 import { DisposableCollection } from '@eclipse-glsp/protocol';
 import { inject, injectable, postConstruct } from 'inversify';
-import { DiagramVisibilityControlActionResponse, RequestDiagramVisibilityControlAction } from '../common/diagram-visibility-control.action.js';
+import {
+    DiagramVisibilityControlActionResponse,
+    RequestDiagramVisibilityControlAction
+} from '../common/diagram-visibility-control.action.js';
 
 // Handle the action within the server and not the glsp client / server
 @injectable()
@@ -35,13 +38,17 @@ export class DiagramVisibilityControlActionHandler implements Disposable {
     @postConstruct()
     protected init(): void {
         this.toDispose.push(
-            this.actionListener.handleVSCodeRequest<RequestDiagramVisibilityControlAction>(RequestDiagramVisibilityControlAction.KIND, async message => {
-                this.count += message.action.increase;
-                console.log(`Diagram Visibility Control from VS Code: ${this.count}`);
-                return DiagramVisibilityControlActionResponse.create({
-                    count: this.count
-                });
-            })
+            this.actionListener.handleVSCodeRequest<RequestDiagramVisibilityControlAction>(
+                RequestDiagramVisibilityControlAction.KIND,
+                async message => {
+                    // this.count += message.action.increase;
+                    console.log(`Diagram Visibility Control from VS Code: ${this.count}`);
+
+                    return DiagramVisibilityControlActionResponse.create({
+                        count: this.count
+                    });
+                }
+            )
         );
     }
 

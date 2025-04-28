@@ -13,7 +13,7 @@ import { Action, RequestAction, type ResponseAction } from '@eclipse-glsp/protoc
 
 export interface RequestDiagramVisibilityControlAction extends RequestAction<DiagramVisibilityControlActionResponse> {
     kind: typeof RequestDiagramVisibilityControlAction.KIND;
-    increase: number;
+    // increase: number;
 }
 
 export namespace RequestDiagramVisibilityControlAction {
@@ -23,7 +23,9 @@ export namespace RequestDiagramVisibilityControlAction {
         return RequestAction.hasKind(object, KIND);
     }
 
-    export function create(options: Omit<RequestDiagramVisibilityControlAction, 'kind' | 'requestId'>): RequestDiagramVisibilityControlAction {
+    export function create(
+        options?: Omit<RequestDiagramVisibilityControlAction, 'kind' | 'requestId'>
+    ): RequestDiagramVisibilityControlAction {
         return {
             kind: KIND,
             requestId: '',

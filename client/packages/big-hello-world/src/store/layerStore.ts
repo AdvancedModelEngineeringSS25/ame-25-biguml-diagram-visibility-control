@@ -26,6 +26,7 @@ interface LayerState {
 
     setConfiguration: (name: string) => void;
     getVisibleElementIds: () => string[];
+    getModel: () => { layers: Layer[]; configuration: string };
 }
 
 export const useLayerStore = create<LayerState>()(
@@ -125,7 +126,12 @@ export const useLayerStore = create<LayerState>()(
                     }
                 }
                 return [...ids];
-            }
+            },
+
+            getModel: () => ({
+                layers: get().layers,
+                configuration: get().configuration
+            })
         }),
         {
             name: 'diagram-layer-state'

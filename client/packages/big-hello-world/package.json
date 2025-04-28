@@ -50,6 +50,9 @@
     "compile": "tsc -b",
     "lint": "eslint -c ./eslint.config.js",
     "lint:fix": "npm run lint -- --fix",
+    "test": "vitest run",
+    "test:ui": "vitest --ui --watch",
+    "test:watch": "vitest --watch",
     "tsc": "tsc",
     "watch": "concurrently --kill-others 'npm run compile -- --watch' 'npm run bundle -- --watch'"
   },
@@ -65,8 +68,10 @@
   "devDependencies": {
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "@vitest/ui": "^3.0.9",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "vitest": "^3.0.9"
   },
   "peerDependencies": {
     "inversify": "^6.1.3",
