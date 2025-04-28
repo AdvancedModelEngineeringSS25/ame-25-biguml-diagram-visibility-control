@@ -17,9 +17,9 @@ const sampleLayers: Layer[] = [
         visible: true,
         zIndex: 1,
         filters: [
-            { id: 'f1', name: 'filter 1', type: 'type', types: ['property', 'relation'] },
-            { id: 'f2', name: 'filter 2', type: 'pattern', pattern: 'hello', types: ['property'] },
-            { id: 'f3', name: 'filter 3', type: 'selection', elements: ['1', '5', '7'] }
+            { id: '1', name: 'filter 1', type: 'type', types: ['property', 'relation'] },
+            { id: '2', name: 'filter 2', type: 'pattern', pattern: 'hello', types: ['property'] },
+            { id: '3', name: 'filter 3', type: 'selection', elements: ['1', '5', '7'] }
         ]
     },
     {
@@ -27,7 +27,7 @@ const sampleLayers: Layer[] = [
         name: 'Layer 2',
         visible: false,
         zIndex: 2,
-        filters: [{ id: 'f4', name: 'filter 4', type: 'type', types: ['class'] }]
+        filters: [{ id: '4', name: 'filter 4', type: 'type', types: ['class'] }]
     }
 ];
 

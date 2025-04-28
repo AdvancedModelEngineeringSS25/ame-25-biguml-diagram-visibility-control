@@ -8,17 +8,19 @@
  **********************************************************************************/
 import { useState } from 'react';
 import type { Filter } from '../model/model.js';
-import { seedStore } from '../store/devSeed.js';
 import { useLayerStore } from '../store/layerStore.js';
 import { FilterDetailsView } from './FilterDetailsView.js';
 import { LayerDetailsView } from './LayerDetailsView.js';
 import { MainView } from './MainView.js';
 export function DiagramVisibilityControl() {
-    seedStore();
+    // seedStore();
     const layers = useLayerStore(s => s.layers);
     const storeAddLayer = useLayerStore(s => s.addLayer);
     const storeToggle = useLayerStore(s => s.toggleLayer);
     const storeReorder = useLayerStore(s => s.reorderLayers);
+    const storeDeleteLayer = useLayerStore(s => s.deleteLayer);
+    const storeUpdateLayer = useLayerStore(s => s.updateLayer);
+    const storeDeleteFilter = useLayerStore(s => s.deleteFilter);
     const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
     const [selectedFilterId, setSelectedFilterId] = useState<string | null>(null);
 
@@ -75,16 +77,22 @@ export function DiagramVisibilityControl() {
         setSelectedFilterId(null);
     };
 
-    const deleteFilter = (id: string) => {
-        console.log('deleteFilter clicked', id);
-    };
-
     const deleteLayer = (id: string) => {
         console.log('deleteLayer clicked', id);
+        storeDeleteLayer(id);
+    };
+
+    const changeLayerName = (id: string, name: string) => {
+        console.log('changeLayerName clicked', id, name);
+        storeUpdateLayer(id, { name });
     };
 
     const addFilter = () => {
         console.log('addFilter clicked');
+    };
+
+    const deleteFilter = (layerId: string, filterId: string) => {
+        storeDeleteFilter(layerId, filterId);
     };
 
     /***********************
@@ -116,6 +124,7 @@ export function DiagramVisibilityControl() {
         return (
             <LayerDetailsView
                 layer={selectedLayer}
+                changeLayerName={changeLayerName}
                 onBack={goBackToLayers}
                 deleteFilter={deleteFilter}
                 deleteLayer={deleteLayer}
