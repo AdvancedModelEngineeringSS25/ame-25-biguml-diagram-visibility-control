@@ -20,11 +20,14 @@ export function PatternFilterEditor({ filter, toggleSelectedType }: { filter: Pa
             <div>
                 {ALL_TYPES.map((type, index) => (
                     <div key={index}>
-                        <BigCheckbox
-                            label={type}
-                            value={(filter.types ?? []).includes(type)}
-                            onDidChangeValue={() => toggleSelectedType(type)}
-                        ></BigCheckbox>
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
+                            <BigCheckbox
+                                label=""
+                                value={(filter.types ?? []).includes(type)}
+                                onDidChangeValue={() => toggleSelectedType(type)}
+                            />
+                            <span>{type}</span>
+                        </div>
                     </div>
                 ))}
             </div>

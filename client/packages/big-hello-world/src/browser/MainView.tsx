@@ -35,9 +35,12 @@ export function MainView({
             <div id='layer-list'>
                 <h2>Your Layers</h2>
                 {layers.map(layer => (
-                    <div key={layer.id} id='layer'>
-                        <span>{layer.name}</span>
-                        <div id='layer-buttons' style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
+                    <div key={layer.id} id='layer' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>{layer.name}</span>
+                        <div
+                            id='layer-buttons'
+                            style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center', marginLeft: 'auto' }}
+                        >
                             <VSCodeButton slot='anchor' appearance='icon' onClick={() => moveUp(layer.id)}>
                                 <div className='codicon codicon-chevron-up'></div>
                             </VSCodeButton>
@@ -56,11 +59,12 @@ export function MainView({
                             </VSCodeButton>
                         </div>
                     </div>
+
                 ))}
             </div>
             <br />
             <VSCodeDivider />
-            <footer>
+            <footer style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
                 <div id='secondary-footer-buttons' style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
                     <VSCodeButton slot='anchor' appearance='icon' onClick={uploadConfig}>
                         <div className='codicon codicon-cloud-upload'></div>
@@ -72,7 +76,7 @@ export function MainView({
                         <div className='codicon codicon-refresh'></div>
                     </VSCodeButton>
                 </div>
-                <div id='primary-footer-button'>
+                <div id='primary-footer-button' style={{ marginLeft: 'auto' }}>
                     <VSCodeButton slot='anchor' appearance='icon' onClick={addLayer}>
                         <div className='codicon codicon-add'></div>
                     </VSCodeButton>
