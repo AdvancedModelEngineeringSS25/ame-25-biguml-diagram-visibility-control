@@ -27,9 +27,9 @@ export function LayerDetailsView({ layer, onBack, deleteFilter, deleteLayer, add
 
             <h3>Filters</h3>
             {layer.filters.map(filter => (
-                <div key={filter.id} className="className='reference-item-body">
-                    <span>{filter.type}</span>
-                    <div id="filter-buttons" className='reference-item-actions'>
+                <div key={filter.id} className="className='reference-item-body" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
+                    <span style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>{filter.type}</span>
+                    <div id="filter-buttons" className='reference-item-actions' style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center', marginLeft: 'auto' }}>
                         <VSCodeButton slot='anchor' className='action-delete' appearance='icon' onClick={() => deleteFilter(filter.id)}>
                             <div className='codicon codicon-trash'></div>
                         </VSCodeButton>
@@ -41,13 +41,13 @@ export function LayerDetailsView({ layer, onBack, deleteFilter, deleteLayer, add
             ))}
             <br />
             <VSCodeDivider />
-            <footer>
-                <div id="secondary-footer-buttons">
+            <footer style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
+                <div id='secondary-footer-buttons' style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
                     <VSCodeButton slot='anchor' className='action-delete' appearance='icon' onClick={() => deleteLayer(layer.id)}>
                         <div className='codicon codicon-trash'></div>
                     </VSCodeButton>
                 </div>
-                <div id="primary-footer-button">
+                <div id='primary-footer-button' style={{ marginLeft: 'auto' }}>
                     <VSCodeButton slot='anchor' appearance='icon' onClick={addFilter}>
                         <div className='codicon codicon-add'></div>
                     </VSCodeButton>
