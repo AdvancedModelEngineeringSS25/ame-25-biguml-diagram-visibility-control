@@ -29,10 +29,12 @@ export function FilterDetailsView({
 }) {
     return (
         <div className='flex flex-col gap-4'>
-            <VSCodeButton slot='anchor' appearance='icon' onClick={onBack}>
-                <div className='codicon codicon-chevron-left'></div>
-            </VSCodeButton>
-            <h2>Edit Filter</h2>
+            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px', marginLeft: '-4px' }}>
+                <VSCodeButton slot='anchor' appearance='icon' onClick={onBack} style={{ display: 'flex', alignItems: 'center' }}>
+                    <div className='codicon codicon-chevron-left'></div>
+                </VSCodeButton>
+                <h2>Edit Filter</h2>
+            </div>
             <VSCodeTextField
                 onChange={e => {
                     const newValue = (e.target as HTMLInputElement).value;

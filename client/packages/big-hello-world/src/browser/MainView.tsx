@@ -33,7 +33,7 @@ export function MainView({
     return (
         <div id='main-view'>
             <div id='layer-list'>
-                <h2>Your Layers</h2>
+                <h2>Layers</h2>
                 {layers.map(layer => (
                     <div key={layer.id} id='layer' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
                         <span style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>{layer.name}</span>
@@ -59,7 +59,6 @@ export function MainView({
                             </VSCodeButton>
                         </div>
                     </div>
-
                 ))}
             </div>
             <br />
