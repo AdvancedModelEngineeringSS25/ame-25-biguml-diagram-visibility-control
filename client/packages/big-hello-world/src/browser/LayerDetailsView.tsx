@@ -28,10 +28,12 @@ export function LayerDetailsView({
 }) {
     return (
         <div id='layer-details-view'>
-            <VSCodeButton slot='anchor' appearance='icon' onClick={onBack}>
-                <div className='codicon codicon-chevron-left'></div>
-            </VSCodeButton>
-            <h2>Edit Layer</h2>
+            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
+                <VSCodeButton slot='anchor' appearance='icon' onClick={onBack} style={{ display: 'flex', alignItems: 'center' }}>
+                    <div className='codicon codicon-chevron-left'></div>
+                </VSCodeButton>
+                <h2>Edit Layer</h2>
+            </div>
             <VSCodeTextField
                 onChange={e => {
                     const newValue = (e.target as HTMLInputElement).value;
