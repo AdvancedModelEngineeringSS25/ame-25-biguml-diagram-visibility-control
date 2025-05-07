@@ -49,7 +49,11 @@ export function LayerDetailsView({
                     className="className='reference-item-body"
                     style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}
                 >
-                    <span style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>{filter.type}</span>
+                    <div style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
+                        <span>{filter.name}</span>
+                        <span>-</span>
+                        <span>{filter.type}</span>
+                    </div>
                     <div
                         id='filter-buttons'
                         className='reference-item-actions'
