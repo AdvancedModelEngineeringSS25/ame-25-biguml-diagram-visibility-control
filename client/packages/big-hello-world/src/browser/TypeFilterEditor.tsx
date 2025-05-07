@@ -10,7 +10,7 @@ import { BigCheckbox } from '@borkdominik-biguml/big-components';
 import type { TypeFilter } from '../model/model.js';
 import { ALL_TYPES } from '../model/model.js';
 
-export function TypeFilterEditor({ filter, toggleSelectedType }: { 
+export function TypeFilterEditor({ filter, toggleSelectedType }: {
     filter: TypeFilter,
     toggleSelectedType: (id: string) => void;
 }) {
@@ -20,10 +20,14 @@ export function TypeFilterEditor({ filter, toggleSelectedType }: {
             <div>
                 {ALL_TYPES.map((type, index) => (
                     <div key={index}>
-                        <BigCheckbox 
-                            label={type} 
-                            value={filter.types.includes(type)} 
-                            onDidChangeValue={() => toggleSelectedType(type)}></BigCheckbox>
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
+                            <BigCheckbox
+                                label=""
+                                value={(filter.types ?? []).includes(type)}
+                                onDidChangeValue={() => toggleSelectedType(type)}
+                            />
+                            <span>{type}</span>
+                        </div>
                     </div>
                 ))}
             </div>

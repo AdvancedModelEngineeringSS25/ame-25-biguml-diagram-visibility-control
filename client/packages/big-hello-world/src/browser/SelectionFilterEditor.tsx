@@ -6,7 +6,6 @@
  *
  * SPDX-License-Identifier: MIT
  **********************************************************************************/
-import { BigTooltip } from '@borkdominik-biguml/big-components';
 import { VSCodeButton, VSCodeDivider } from '@vscode/webview-ui-toolkit/react/index.js';
 import type { SelectionFilter } from '../model/model.js';
 
@@ -20,14 +19,12 @@ export function SelectionFilterEditor({ filter, deleteSelectedElement, startSele
             <label>Selected Elements:</label>
             <div>
                 {filter.elements.map(element => (
-                    <div key={element} id="element-buttons">
-                        <span>{element}</span>
-                        <BigTooltip>
-                            <VSCodeButton slot='anchor' className='action-delete' appearance='icon' onClick={() => deleteSelectedElement(element)}>
-                                <div className='codicon codicon-trash'></div>
-                            </VSCodeButton>
-                            <span slot='text'>Delete</span>
-                        </BigTooltip>
+                    <div key={element} id="element-buttons" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>{element}</span>
+                        <VSCodeButton slot='anchor' className='action-delete' appearance='icon' onClick={() => deleteSelectedElement(element)}
+                            style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center', marginLeft: 'auto' }}>
+                            <div className='codicon codicon-trash'></div>
+                        </VSCodeButton>
                     </div>
                 ))}
             </div>
