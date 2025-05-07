@@ -8,17 +8,20 @@
  **********************************************************************************/
 import { useState } from 'react';
 import type { Filter } from '../model/model.js';
-import { seedStore } from '../store/devSeed.js';
 import { useLayerStore } from '../store/layerStore.js';
 import { FilterDetailsView } from './FilterDetailsView.js';
 import { LayerDetailsView } from './LayerDetailsView.js';
 import { MainView } from './MainView.js';
 export function DiagramVisibilityControl() {
-    seedStore();
+    // seedStore();
     const layers = useLayerStore(s => s.layers);
-    // const storeAddLayer = useLayerStore(s => s.addLayer);
+    const storeAddLayer = useLayerStore(s => s.addLayer);
     const storeToggle = useLayerStore(s => s.toggleLayer);
     const storeReorder = useLayerStore(s => s.reorderLayers);
+    const storeDeleteLayer = useLayerStore(s => s.deleteLayer);
+    const storeUpdateLayer = useLayerStore(s => s.updateLayer);
+    const storeAddFilter = useLayerStore(s => s.addFilter);
+    const storeDeleteFilter = useLayerStore(s => s.deleteFilter);
     const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
     const [selectedFilterId, setSelectedFilterId] = useState<string | null>(null);
 
@@ -38,12 +41,14 @@ export function DiagramVisibilityControl() {
 
     const moveDown = (id: string) => {
         console.log('moveDown clicked', id);
+        const from = layers.findIndex(l => l.id === id);
+        if (from < 0 || from >= layers.length - 1) return; // already bottom or not found
+        storeReorder(from, from + 1);
     };
 
     const toggleActive = (id: string) => {
         console.log('toggleActive clicked', id);
         storeToggle(id);
-        // setLayers(prevLayers => prevLayers.map(layer => (layer.id === id ? { ...layer, visible: !layer.visible } : layer)));
     };
 
     const uploadConfig = () => {
@@ -60,6 +65,7 @@ export function DiagramVisibilityControl() {
 
     const addLayer = () => {
         console.log('addLayer clicked');
+        storeAddLayer();
     };
 
     /**********************
@@ -72,21 +78,36 @@ export function DiagramVisibilityControl() {
         setSelectedFilterId(null);
     };
 
-    const deleteFilter = (id: string) => {
-        console.log('deleteFilter clicked', id);
-    };
-
     const deleteLayer = (id: string) => {
         console.log('deleteLayer clicked', id);
+        storeDeleteLayer(id);
     };
 
-    const addFilter = () => {
-        console.log('addFilter clicked');
+    const changeLayerName = (id: string, name: string) => {
+        console.log('changeLayerName clicked', id, name);
+        storeUpdateLayer(id, { name });
     };
 
     /***********************
     Filter Details Functions
     ***********************/
+
+    const addFilter = (layerId: string) => {
+        console.log('addFilter clicked');
+        storeAddFilter(layerId);
+    };
+
+    const deleteFilter = (layerId: string, filterId: string) => {
+        console.log('deleteFilter clicked', layerId, filterId);
+        storeDeleteFilter(layerId, filterId);
+    };
+
+    const changeFilterName = (layerId: string, filterId: string, name: string) => {
+        console.log('changeFilterName clicked', layerId, filterId, name);
+        storeUpdateLayer(layerId, {
+            filters: selectedLayer?.filters.map(f => (f.id === filterId ? { ...f, name } : f)) || []
+        });
+    };
 
     const goBackToLayer = () => {
         console.log('goBackToLayer clicked');
@@ -113,6 +134,7 @@ export function DiagramVisibilityControl() {
         return (
             <LayerDetailsView
                 layer={selectedLayer}
+                changeLayerName={changeLayerName}
                 onBack={goBackToLayers}
                 deleteFilter={deleteFilter}
                 deleteLayer={deleteLayer}
@@ -128,6 +150,7 @@ export function DiagramVisibilityControl() {
             <FilterDetailsView
                 filter={selectedFilter}
                 onBack={goBackToLayer}
+                onChangeName={name => changeFilterName(selectedLayer.id, selectedFilter.id, name)}
                 toggleSelectedType={toggleSelectedType}
                 deleteSelectedElement={deleteSelectedElement}
                 startSelection={startSelection}
