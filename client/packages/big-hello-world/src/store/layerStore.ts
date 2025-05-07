@@ -8,7 +8,7 @@
  **********************************************************************************/
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Filter, Layer, SelectionFilter } from '../model/model.js';
+import type { Filter, Layer } from '../model/model.js';
 
 interface LayerState {
     layers: Layer[];
@@ -25,7 +25,7 @@ interface LayerState {
     deleteFilter: (layerId: string, filterId: string) => void;
 
     setConfiguration: (name: string) => void;
-    getVisibleElementIds: () => string[];
+    // getVisibleElementIds: () => string[];
     getModel: () => { layers: Layer[]; configuration: string };
 }
 
@@ -122,21 +122,21 @@ export const useLayerStore = create<LayerState>()(
 
             setConfiguration: name => set({ configuration: name }),
 
-            getVisibleElementIds: () => {
-                const ordered = get()
-                    .layers.filter(l => l.visible)
-                    .sort((a, b) => a.zIndex - b.zIndex);
+            // getVisibleElementIds: () => {
+            //     const ordered = get()
+            //         .layers.filter(l => l.visible)
+            //         .sort((a, b) => a.zIndex - b.zIndex);
 
-                const ids = new Set<string>();
-                for (const layer of ordered) {
-                    for (const f of layer.filters) {
-                        if (f.type === 'selection') {
-                            (f as SelectionFilter).elements.forEach(id => ids.add(id));
-                        }
-                    }
-                }
-                return [...ids];
-            },
+            //     const ids = new Set<string>();
+            //     for (const layer of ordered) {
+            //         for (const f of layer.filters) {
+            //             if (f.type === 'selection') {
+            //                 (f as SelectionFilter).elements.forEach(id => ids.add(id));
+            //             }
+            //         }
+            //     }
+            //     return [...ids];
+            // },
 
             getModel: () => ({
                 layers: get().layers,
