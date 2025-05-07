@@ -53,7 +53,12 @@ export function LayerDetailsView({
                         className='reference-item-actions'
                         style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center', marginLeft: 'auto' }}
                     >
-                        <VSCodeButton slot='anchor' className='action-delete' appearance='icon' onClick={() => deleteFilter(filter.id)}>
+                        <VSCodeButton
+                            slot='anchor'
+                            className='action-delete'
+                            appearance='icon'
+                            onClick={() => deleteFilter(layer.id, filter.id)}
+                        >
                             <div className='codicon codicon-trash'></div>
                         </VSCodeButton>
                         <VSCodeButton slot='anchor' appearance='icon' onClick={() => onFilterSelect(filter.id)}>
@@ -71,7 +76,7 @@ export function LayerDetailsView({
                     </VSCodeButton>
                 </div>
                 <div id='primary-footer-button' style={{ marginLeft: 'auto' }}>
-                    <VSCodeButton slot='anchor' appearance='icon' onClick={addFilter}>
+                    <VSCodeButton slot='anchor' appearance='icon' onClick={() => addFilter(layer.id)}>
                         <div className='codicon codicon-add'></div>
                     </VSCodeButton>
                 </div>
