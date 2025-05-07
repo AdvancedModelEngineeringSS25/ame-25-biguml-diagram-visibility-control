@@ -41,7 +41,7 @@ export class DiagramVisibilityControlActionHandler implements Disposable {
             this.actionListener.handleVSCodeRequest<RequestDiagramVisibilityControlAction>(
                 RequestDiagramVisibilityControlAction.KIND,
                 async message => {
-                    // this.count += message.action.increase;
+                    this.count += message.action.increase;
                     console.log(`Diagram Visibility Control from VS Code: ${this.count}`);
 
                     return DiagramVisibilityControlActionResponse.create({
