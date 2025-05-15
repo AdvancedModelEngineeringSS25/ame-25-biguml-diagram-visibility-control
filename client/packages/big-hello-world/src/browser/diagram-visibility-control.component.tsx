@@ -88,14 +88,14 @@ export function DiagramVisibilityControl() {
         storeUpdateLayer(id, { name });
     };
 
+    const addFilter = (layerId: string, type: 'type' | 'pattern' | 'selection') => {
+        console.log('addFilter clicked', type);
+        storeAddFilter(layerId, type);
+    };
+
     /***********************
     Filter Details Functions
     ***********************/
-
-    const addFilter = (layerId: string) => {
-        console.log('addFilter clicked');
-        storeAddFilter(layerId);
-    };
 
     const deleteFilter = (layerId: string, filterId: string) => {
         console.log('deleteFilter clicked', layerId, filterId);

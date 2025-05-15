@@ -8,7 +8,7 @@
  **********************************************************************************/
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Filter, Layer } from '../model/model.js';
+import type { Filter, Layer, PatternFilter, SelectionFilter, TypeFilter } from '../model/model.js';
 
 interface LayerState {
     layers: Layer[];
@@ -20,7 +20,7 @@ interface LayerState {
     reorderLayers: (from: number, to: number) => void;
     toggleLayer: (id: string) => void;
 
-    addFilter: (layerId: string) => void;
+    addFilter: (layerId: string, newLayerType: 'type' | 'selection' | 'pattern', ) => void;
     updateFilter: (layerId: string, filterId: string, f: Filter) => void;
     deleteFilter: (layerId: string, filterId: string) => void;
 
@@ -81,13 +81,10 @@ export const useLayerStore = create<LayerState>()(
                 }));
             },
 
-            addFilter: layerId => {
-                const f: Filter = {
-                    id: crypto.randomUUID(),
-                    name: `Filter ${(get().layers.find(l => l.id == layerId)?.filters.length ?? 0) + 1} `,
-                    type: 'type',
-                    types: []
-                };
+            addFilter: (layerId, newLayerType: 'type' | 'selection' | 'pattern' ) => {
+                const f: Filter = createFilter(
+                    (get().layers.find(l => l.id == layerId)?.filters.length ?? 0) + 1,
+                    newLayerType);
 
                 set(state => ({
                     layers: state.layers.map(l => (l.id === layerId ? { ...l, filters: [...l.filters, f] } : l))
@@ -148,3 +145,37 @@ export const useLayerStore = create<LayerState>()(
         }
     )
 );
+
+export function createFilter(layerId: number, type: string) {
+    const base = {
+        id: crypto.randomUUID(),
+        name: `Filter ${layerId}`,
+    };
+
+    switch (type) {
+        case 'type':
+            return {
+                ...base,
+                type: 'type',
+                types: []
+            } satisfies TypeFilter;
+
+        case 'selection':
+            return {
+                ...base,
+                type: 'selection',
+                elements: []
+            } satisfies SelectionFilter;
+
+        case 'pattern':
+            return {
+                ...base,
+                type: 'pattern',
+                pattern: '',
+                types: []
+            } satisfies PatternFilter;
+
+        default:
+            throw new Error(`Unsupported filter type: ${type}`);
+    }
+}

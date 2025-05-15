@@ -7,6 +7,7 @@
  * SPDX-License-Identifier: MIT
  **********************************************************************************/
 import { VSCodeButton, VSCodeDivider, VSCodeTextField } from '@vscode/webview-ui-toolkit/react/index.js';
+import { useEffect, useRef, useState } from 'react';
 import type { Layer } from '../model/model.js';
 
 export function LayerDetailsView({
@@ -23,9 +24,38 @@ export function LayerDetailsView({
     changeLayerName: (id: string, name: string) => void;
     deleteFilter: (layerId: string, filderId: string) => void;
     deleteLayer: (id: string) => void;
-    addFilter: (layerId: string) => void;
+    addFilter: (layerId: string, newLayerType: 'type' | 'pattern' | 'selection') => void;
     onFilterSelect: (id: string) => void;
 }) {
+    const [showFilterOptions, setShowFilterOptions] = useState(false);
+    const popupRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+                setShowFilterOptions(false);
+            }
+        }
+
+        if (showFilterOptions) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showFilterOptions]);
+
+
+    const handleAddClick = () => {
+        setShowFilterOptions(!showFilterOptions);
+    };
+
+    const handleSelectFilter = (type: 'type' | 'pattern' | 'selection') => {
+        addFilter(layer.id, type);
+        setShowFilterOptions(false);
+    };
+
     return (
         <div id='layer-details-view'>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
@@ -81,10 +111,32 @@ export function LayerDetailsView({
                         <div className='codicon codicon-trash'></div>
                     </VSCodeButton>
                 </div>
-                <div id='primary-footer-button' style={{ marginLeft: 'auto' }}>
-                    <VSCodeButton slot='anchor' appearance='icon' onClick={() => addFilter(layer.id)}>
+                <div id='primary-footer-button' style={{ position: 'relative', marginLeft: 'auto' }}>
+                    <VSCodeButton slot='anchor' appearance='icon' onClick={handleAddClick}>
                         <div className='codicon codicon-add'></div>
                     </VSCodeButton>
+
+                    {showFilterOptions && (
+                        <div ref={popupRef}
+                            style={{
+                                position: 'absolute',
+                                right: 0,
+                                bottom: '100%',
+                                marginBottom: '4px',
+                                background: 'var(--vscode-editor-background)',
+                                zIndex: 10,
+                                padding: '4px',
+                                boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
+                            }}
+                        >
+                            <div style={{ cursor: 'pointer' }} onClick={() => handleSelectFilter('type')}>Type</div>
+                            <VSCodeDivider />
+                            <div style={{ cursor: 'pointer' }} onClick={() => handleSelectFilter('pattern')}>Pattern</div>
+                            <VSCodeDivider />
+                            <div style={{ cursor: 'pointer' }} onClick={() => handleSelectFilter('selection')}>Selection</div>
+                        </div>
+                    )}
+
                 </div>
             </footer>
         </div>
