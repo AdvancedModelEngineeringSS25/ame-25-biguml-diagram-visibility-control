@@ -8,7 +8,11 @@
  **********************************************************************************/
 import { configureActionHandler, FeatureModule } from '@eclipse-glsp/client';
 import { ExtensionActionKind } from '@eclipse-glsp/vscode-integration-webview/lib/features/default/extension-action-handler.js';
-import { DiagramVisibilityControlActionResponse, RequestDiagramVisibilityControlAction } from '../common/diagram-visibility-control.action.js';
+import {
+    DiagramVisibilityControlActionResponse,
+    RequestDiagramVisibilityControlAction
+} from '../common/diagram-visibility-control.action.js';
+import { ExportStoreActionResponse, ImportStoreActionResponse } from '../common/export-import-state.action.js';
 import { DiagramVisibilityControlHandler } from './diagram-visibility-control.handler.js';
 
 export const DiagramVisibilityControlModule = new FeatureModule((bind, unbind, isBound, rebind) => {
@@ -19,4 +23,6 @@ export const DiagramVisibilityControlModule = new FeatureModule((bind, unbind, i
 
     // Allow the DiagramVisibilityControlActionResponse to propagate to the server
     bind(ExtensionActionKind).toConstantValue(DiagramVisibilityControlActionResponse.KIND);
+    bind(ExtensionActionKind).toConstantValue(ExportStoreActionResponse.KIND);
+    bind(ExtensionActionKind).toConstantValue(ImportStoreActionResponse.KIND);
 });

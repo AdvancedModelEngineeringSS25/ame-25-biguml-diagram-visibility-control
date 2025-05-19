@@ -9,6 +9,7 @@
 
 import { TYPES } from '@borkdominik-biguml/big-vscode-integration/vscode';
 import { ContainerModule } from 'inversify';
+import { DiagramVisibilityControlActionHandler } from './diagram-visibility-control.handler.js';
 import { DiagramVisibilityControlProvider, DiagramVisibilityControlViewId } from './diagram-visibility-control.provider.js';
 
 export function DiagramVisibilityControlModule(viewId: string) {
@@ -23,8 +24,8 @@ export function DiagramVisibilityControlModule(viewId: string) {
         // Remember to comment out the the glsp client handler!
         // In DiagramVisibilityControlActionHandler implementation GLSP has priority over vscode
 
-        // bind(DiagramVisibilityControlActionHandler).toSelf().inSingletonScope();
-        // bind(TYPES.Disposable).toService(DiagramVisibilityControlActionHandler);
-        // bind(TYPES.RootInitialization).toService(DiagramVisibilityControlActionHandler);
+        bind(DiagramVisibilityControlActionHandler).toSelf().inSingletonScope();
+        bind(TYPES.Disposable).toService(DiagramVisibilityControlActionHandler);
+        bind(TYPES.RootInitialization).toService(DiagramVisibilityControlActionHandler);
     });
 }

@@ -17,10 +17,17 @@ import {
 } from '@borkdominik-biguml/big-vscode-integration/vscode';
 import { DisposableCollection } from '@eclipse-glsp/protocol';
 import { inject, injectable, postConstruct } from 'inversify';
+import * as vscode from 'vscode';
 import {
     DiagramVisibilityControlActionResponse,
     RequestDiagramVisibilityControlAction
 } from '../common/diagram-visibility-control.action.js';
+import {
+    ExportStoreActionResponse,
+    ImportStoreActionResponse,
+    RequestExportStoreAction,
+    RequestImportStoreAction
+} from '../common/export-import-state.action.js';
 
 // Handle the action within the server and not the glsp client / server
 @injectable()
@@ -49,6 +56,67 @@ export class DiagramVisibilityControlActionHandler implements Disposable {
                     });
                 }
             )
+        );
+        this.toDispose.push(
+            this.actionListener.handleVSCodeRequest<RequestExportStoreAction>(RequestExportStoreAction.KIND, async message => {
+                console.log(`Export Store from VS Code: ${message.action.data}`);
+
+                const uri = await vscode.window.showSaveDialog({
+                    title: 'Save Configuration File',
+                    defaultUri: vscode.Uri.file('configuration-file.json'),
+                    filters: {
+                        JSON: ['json']
+                    }
+                });
+
+                if (uri) {
+                    try {
+                        if (typeof message.action.data === 'string') {
+                            await vscode.workspace.fs.writeFile(uri, Buffer.from(message.action.data, 'utf8'));
+                        } else {
+                            throw new Error('Export data is not a string');
+                        }
+
+                        return ExportStoreActionResponse.create({ success: true });
+                    } catch (error) {
+                        console.error('Failed to write file:', error);
+                        return ExportStoreActionResponse.create({ success: false });
+                    }
+                }
+
+                // User canceled the dialog
+                return ExportStoreActionResponse.create({ success: false });
+            })
+        );
+
+        this.toDispose.push(
+            this.actionListener.handleVSCodeRequest<RequestImportStoreAction>(RequestImportStoreAction.KIND, async () => {
+                const uri = await vscode.window.showOpenDialog({
+                    canSelectMany: false,
+                    filters: { JSON: ['json'] },
+                    title: 'Import Configuration File'
+                });
+
+                if (uri && uri[0]) {
+                    try {
+                        const content = await vscode.workspace.fs.readFile(uri[0]);
+                        const text = Buffer.from(content).toString('utf8');
+                        const parsed = JSON.parse(text);
+
+                        // Optional: validate parsed structure here
+
+                        return ImportStoreActionResponse.create({
+                            data: parsed
+                        });
+                        //Handle error managment
+                    } catch (error) {
+                        console.error('Failed to import configuration:', error);
+                        return ImportStoreActionResponse.create({ data: {} });
+                    }
+                }
+
+                return ImportStoreActionResponse.create({ data: {} });
+            })
         );
     }
 
