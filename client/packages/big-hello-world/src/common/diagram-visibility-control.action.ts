@@ -23,7 +23,9 @@ export namespace RequestDiagramVisibilityControlAction {
         return RequestAction.hasKind(object, KIND);
     }
 
-    export function create(options: Omit<RequestDiagramVisibilityControlAction, 'kind' | 'requestId'>): RequestDiagramVisibilityControlAction {
+    export function create(
+        options: Omit<RequestDiagramVisibilityControlAction, 'kind' | 'requestId'>
+    ): RequestDiagramVisibilityControlAction {
         return {
             kind: KIND,
             requestId: '',

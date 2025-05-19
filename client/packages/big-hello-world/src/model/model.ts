@@ -7,6 +7,16 @@
  * SPDX-License-Identifier: MIT
  **********************************************************************************/
 
+export type Element = {
+    id: string;
+    type: Type;
+    children?: Element[];
+};
+
+export type ElementId = Element['id'];
+
+export type ElementIdsPerLayer = Record<Layer['id'], ElementId[]>;
+
 interface FilterBase {
     id: string;
     name: string;
@@ -14,18 +24,18 @@ interface FilterBase {
 
 export type TypeFilter = FilterBase & {
     type: 'type';
-    types: string[];
+    types: Type[];
 };
 
 export type PatternFilter = FilterBase & {
     type: 'pattern';
     pattern: string;
-    types?: string[];
+    types?: Type[];
 };
 
 export type SelectionFilter = FilterBase & {
     type: 'selection';
-    elements: string[];
+    elements: ElementId[];
 };
 
 export type Filter = TypeFilter | SelectionFilter | PatternFilter;
@@ -42,4 +52,5 @@ export interface Layer {
     styleClass?: string;
 }
 
-export const ALL_TYPES = ['class', 'property', 'relation', 'method', 'interface'];
+export const ALL_TYPES = ['class', 'property', 'relation', 'method', 'interface'] as const;
+export type Type = (typeof ALL_TYPES)[number];

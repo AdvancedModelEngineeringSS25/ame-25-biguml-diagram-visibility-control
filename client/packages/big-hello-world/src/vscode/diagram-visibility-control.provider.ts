@@ -8,7 +8,10 @@
  **********************************************************************************/
 import { BIGReactWebview } from '@borkdominik-biguml/big-vscode-integration/vscode';
 import { inject, injectable, postConstruct } from 'inversify';
-import { DiagramVisibilityControlActionResponse, RequestDiagramVisibilityControlAction } from '../common/diagram-visibility-control.action.js';
+import {
+    DiagramVisibilityControlActionResponse,
+    RequestDiagramVisibilityControlAction
+} from '../common/diagram-visibility-control.action.js';
 
 export const DiagramVisibilityControlViewId = Symbol('DiagramVisibilityControlViewId');
 

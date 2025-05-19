@@ -15,6 +15,7 @@ export function DiagramVisibilityControlModule(viewId: string) {
     return new ContainerModule(bind => {
         bind(DiagramVisibilityControlViewId).toConstantValue(viewId);
         bind(DiagramVisibilityControlProvider).toSelf().inSingletonScope();
+        bind(TYPES.Disposable).toService(DiagramVisibilityControlProvider);
         bind(TYPES.RootInitialization).toService(DiagramVisibilityControlProvider);
 
         // Handle the request vscode side
