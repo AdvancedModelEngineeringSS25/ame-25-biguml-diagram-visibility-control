@@ -19,7 +19,7 @@ const sampleLayers: Layer[] = [
         filters: [
             { id: '1', name: 'filter 1', type: 'type', types: ['property', 'relation'] },
             { id: '2', name: 'filter 2', type: 'pattern', pattern: 'hello', types: ['property'] },
-            { id: '3', name: 'filter 3', type: 'selection', elements: ['1', '5', '7'] }
+            { id: '3', name: 'filter 3', type: 'selection', elements: [{id: "1", name: "2"}, {id: "3", name: "4"}] }
         ]
     },
     {
