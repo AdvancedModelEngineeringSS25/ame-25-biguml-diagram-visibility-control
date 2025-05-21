@@ -10,6 +10,9 @@
 import { TYPES } from '@borkdominik-biguml/big-vscode-integration/vscode';
 import { ContainerModule } from 'inversify';
 import { DiagramVisibilityControlProvider, DiagramVisibilityControlViewId } from './diagram-visibility-control.provider.js';
+import { DiagramVisibilityControlActionHandler } from './diagram-visibility-control.handler.js';
+import { ExtensionActionKind } from '@eclipse-glsp/vscode-integration-webview/lib/features/default/extension-action-handler.js';
+import { DiagramVisibilityControlActionResponse } from '../common/diagram-visibility-control.action.js';
 
 export function DiagramVisibilityControlModule(viewId: string) {
     return new ContainerModule(bind => {
@@ -23,8 +26,11 @@ export function DiagramVisibilityControlModule(viewId: string) {
         // Remember to comment out the the glsp client handler!
         // In DiagramVisibilityControlActionHandler implementation GLSP has priority over vscode
 
-        // bind(DiagramVisibilityControlActionHandler).toSelf().inSingletonScope();
-        // bind(TYPES.Disposable).toService(DiagramVisibilityControlActionHandler);
-        // bind(TYPES.RootInitialization).toService(DiagramVisibilityControlActionHandler);
+        // comment this block to use GLSP handlerconso
+        bind(DiagramVisibilityControlActionHandler).toSelf().inSingletonScope();
+        bind(TYPES.Disposable).toService(DiagramVisibilityControlActionHandler);
+        bind(TYPES.RootInitialization).toService(DiagramVisibilityControlActionHandler);
+        bind(ExtensionActionKind).toConstantValue(DiagramVisibilityControlActionResponse.KIND);
+
     });
 }

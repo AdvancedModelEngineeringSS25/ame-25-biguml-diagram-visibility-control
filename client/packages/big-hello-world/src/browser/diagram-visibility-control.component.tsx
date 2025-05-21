@@ -6,12 +6,15 @@
  *
  * SPDX-License-Identifier: MIT
  **********************************************************************************/
-import { useState } from 'react';
+import { VSCodeContext } from '@borkdominik-biguml/big-components';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { DiagramVisibilityControlActionResponse } from '../common/index.js';
 import type { Filter } from '../model/model.js';
 import { useLayerStore } from '../store/layerStore.js';
 import { FilterDetailsView } from './FilterDetailsView.js';
 import { LayerDetailsView } from './LayerDetailsView.js';
 import { MainView } from './MainView.js';
+
 export function DiagramVisibilityControl() {
     // seedStore();
     const layers = useLayerStore(s => s.layers);
@@ -21,12 +24,17 @@ export function DiagramVisibilityControl() {
     const storeDeleteLayer = useLayerStore(s => s.deleteLayer);
     const storeUpdateLayer = useLayerStore(s => s.updateLayer);
     const storeAddFilter = useLayerStore(s => s.addFilter);
+    const storeUpdateFilter = useLayerStore(s => s.updateFilter);
     const storeDeleteFilter = useLayerStore(s => s.deleteFilter);
+    const storeDeleteSelectedElement = useLayerStore(s => s.deleteSelectedElement);
+    const storeAddSelectedElements = useLayerStore(s => s.addSelectedElements);
     const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
     const [selectedFilterId, setSelectedFilterId] = useState<string | null>(null);
 
     const selectedLayer = layers.find(l => l.id === selectedLayerId) || null;
     const selectedFilter: Filter | null = selectedLayer?.filters.find(f => f.id === selectedFilterId) || null;
+    const selectedElementIdsRef = useRef<{ id: string; name: string }[]>([]);
+    const { listenAction } = useContext(VSCodeContext);
 
     /******************
     Main View Functions
@@ -90,7 +98,15 @@ export function DiagramVisibilityControl() {
 
     const addFilter = (layerId: string, type: 'type' | 'pattern' | 'selection') => {
         console.log('addFilter clicked', type);
-        storeAddFilter(layerId, type);
+        const f: Filter = storeAddFilter(layerId, type);
+        if (f.type == 'selection') {
+            storeUpdateFilter(layerId, f.id, {
+                id: f.id,
+                name: f.name,
+                type: 'selection',
+                elements: selectedElementIdsRef.current
+            });
+        }
     };
 
     /***********************
@@ -120,11 +136,25 @@ export function DiagramVisibilityControl() {
 
     const deleteSelectedElement = (id: string) => {
         console.log('deleteSelectedElement clicked', id);
+        storeDeleteSelectedElement(selectedLayerId ?? '', selectedFilterId ?? '', id);
     };
 
-    const startSelection = (id: string) => {
-        console.log('startSelection clicked', id);
+    const addSelection = (id: string) => {
+        console.log('addSelection clicked', id);
+        storeAddSelectedElements(selectedLayerId ?? '', selectedFilterId ?? '', selectedElementIdsRef.current);
     };
+
+    /*******
+    Listener
+    *******/
+
+    useEffect(() => {
+        listenAction(action => {
+            if (DiagramVisibilityControlActionResponse.is(action)) {
+                selectedElementIdsRef.current = action.selectedElementIds ?? [];
+            }
+        });
+    }, [listenAction]);
 
     /*********
     Navigation
@@ -145,7 +175,6 @@ export function DiagramVisibilityControl() {
     }
 
     if (selectedFilter && selectedLayer) {
-        console.log('returning FilterDetailsView');
         return (
             <FilterDetailsView
                 filter={selectedFilter}
@@ -153,7 +182,7 @@ export function DiagramVisibilityControl() {
                 onChangeName={name => changeFilterName(selectedLayer.id, selectedFilter.id, name)}
                 toggleSelectedType={toggleSelectedType}
                 deleteSelectedElement={deleteSelectedElement}
-                startSelection={startSelection}
+                addSelection={addSelection}
             />
         );
     }
