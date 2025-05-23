@@ -13,17 +13,21 @@ import { SelectionFilterEditor } from './SelectionFilterEditor.js';
 import { TypeFilterEditor } from './TypeFilterEditor.js';
 
 export function FilterDetailsView({
+    layerId,
     filter,
     onBack,
     onChangeName,
+    changePattern,
     toggleSelectedType,
     deleteSelectedElement,
     addSelection
 }: {
+    layerId: string;
     filter: Filter;
     onBack: () => void;
     onChangeName: (name: string) => void;
-    toggleSelectedType: (id: string) => void;
+    changePattern: (layerId: string, filterId: string, pattern: string) => void;
+    toggleSelectedType: (layeerId: string, filterId: string, type: string) => void;
     deleteSelectedElement: (id: string) => void;
     addSelection: (id: string) => void;
 }) {
@@ -43,8 +47,15 @@ export function FilterDetailsView({
                 value={filter.name}
             />
             <VSCodeDivider />
-            {filter.type === 'type' && <TypeFilterEditor filter={filter} toggleSelectedType={toggleSelectedType} />}
-            {filter.type === 'pattern' && <PatternFilterEditor filter={filter} toggleSelectedType={toggleSelectedType} />}
+            {filter.type === 'type' && <TypeFilterEditor layerId={layerId} filter={filter} toggleSelectedType={toggleSelectedType} />}
+            {filter.type === 'pattern' && (
+                <PatternFilterEditor
+                    layerId={layerId}
+                    filter={filter}
+                    changePattern={changePattern}
+                    toggleSelectedType={toggleSelectedType}
+                />
+            )}
             {filter.type === 'selection' && (
                 <SelectionFilterEditor filter={filter} deleteSelectedElement={deleteSelectedElement} addSelection={addSelection} />
             )}

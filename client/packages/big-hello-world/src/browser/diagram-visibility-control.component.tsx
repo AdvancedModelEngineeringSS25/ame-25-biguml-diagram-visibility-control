@@ -157,15 +157,45 @@ export function DiagramVisibilityControl() {
         });
     };
 
+    const changePattern = (layerId: string, filterId: string, pattern: string) => {
+        console.log('changePattern clicked', layerId, filterId, pattern);
+        storeUpdateLayer(layerId, {
+            filters: selectedLayer?.filters.map(f => (f.id === filterId ? { ...f, pattern } : f)) || []
+        });
+    };
+
     const goBackToLayer = () => {
         console.log('goBackToLayer clicked');
         setSelectedFilterId(null);
     };
 
-    const toggleSelectedType = (id: string) => {
-        console.log('toggleSelectedType clicked', id);
-    };
+    const toggleSelectedType = (layerId: string, filterId: string, type: string) => {
+        const allowedTypes = ['class', 'property', 'relation', 'method', 'interface'];
+        if (!allowedTypes.includes(type)) return;
 
+        const layer = useLayerStore.getState().layers.find(l => l.id === layerId);
+        if (!layer) return;
+
+        const filter = layer.filters.find(f => f.id === filterId);
+        if (!filter || filter.type == 'selection') return;
+
+        // Ensure types is of the correct literal type array
+        const currentTypes = Array.isArray((filter as any).types) ? ((filter as any).types as string[]) : [];
+
+        const typesSet = new Set(currentTypes);
+        if (typesSet.has(type)) {
+            typesSet.delete(type);
+        } else {
+            typesSet.add(type);
+        }
+
+        const updatedFilter: Filter = {
+            ...filter,
+            types: Array.from(typesSet) as ('class' | 'property' | 'relation' | 'method' | 'interface')[]
+        };
+
+        storeUpdateFilter(layerId, filterId, updatedFilter);
+    };
     const deleteSelectedElement = (id: string) => {
         console.log('deleteSelectedElement clicked', id);
         storeDeleteSelectedElement(selectedLayerId ?? '', selectedFilterId ?? '', id);
@@ -177,8 +207,8 @@ export function DiagramVisibilityControl() {
     };
 
     /*******
-    Listener
-    *******/
+        Listener
+        *******/
 
     useEffect(() => {
         listenAction(action => {
@@ -189,8 +219,8 @@ export function DiagramVisibilityControl() {
     }, [listenAction]);
 
     /*********
-    Navigation
-    *********/
+        Navigation
+        *********/
 
     if (selectedLayer && !selectedFilter) {
         return (
@@ -209,8 +239,12 @@ export function DiagramVisibilityControl() {
     if (selectedFilter && selectedLayer) {
         return (
             <FilterDetailsView
+                layerId={selectedLayer.id}
                 filter={selectedFilter}
                 onBack={goBackToLayer}
+                changePattern={(layerId, filterId, pattern) => {
+                    changePattern(layerId, filterId, pattern);
+                }}
                 onChangeName={name => changeFilterName(selectedLayer.id, selectedFilter.id, name)}
                 toggleSelectedType={toggleSelectedType}
                 deleteSelectedElement={deleteSelectedElement}

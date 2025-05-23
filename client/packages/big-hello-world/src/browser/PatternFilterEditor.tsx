@@ -11,20 +11,37 @@ import { VSCodeTextField } from '@vscode/webview-ui-toolkit/react/index.js';
 import type { PatternFilter } from '../model/model.js';
 import { ALL_TYPES } from '../model/model.js';
 
-export function PatternFilterEditor({ filter, toggleSelectedType }: { filter: PatternFilter; toggleSelectedType: (id: string) => void }) {
+export function PatternFilterEditor({
+    layerId,
+    filter,
+    changePattern,
+    toggleSelectedType
+}: {
+    layerId: string;
+    filter: PatternFilter;
+    changePattern: (layerId: string, filterId: string, pattern: string) => void;
+    toggleSelectedType: (layerId: string, filterId: string, type: string) => void;
+}) {
     return (
         <div>
             <label>Pattern:</label>
-            <VSCodeTextField value={filter.pattern} />
+            <VSCodeTextField
+                onChange={e => {
+                    const newValue = (e.target as HTMLInputElement).value;
+                    changePattern(layerId, filter.id, newValue);
+                }}
+                value={filter.pattern}
+            />
+
             <label>Types:</label>
             <div>
                 {ALL_TYPES.map((type, index) => (
                     <div key={index}>
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
                             <BigCheckbox
-                                label=""
+                                label=''
                                 value={(filter.types ?? []).includes(type)}
-                                onDidChangeValue={() => toggleSelectedType(type)}
+                                onDidChangeValue={() => toggleSelectedType(layerId, filter.id, type)}
                             />
                             <span>{type}</span>
                         </div>
