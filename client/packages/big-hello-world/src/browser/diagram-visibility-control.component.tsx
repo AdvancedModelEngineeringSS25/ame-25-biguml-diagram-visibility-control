@@ -7,16 +7,26 @@
  * SPDX-License-Identifier: MIT
  **********************************************************************************/
 import { VSCodeContext } from '@borkdominik-biguml/big-components';
-import { useContext, useEffect, useRef, useState } from 'react';
+
+import {
+    ExportStoreActionResponse,
+    ImportStoreActionResponse,
+    RequestExportStoreAction,
+    RequestImportStoreAction
+} from '../common/index.js';
+
 import { DiagramVisibilityControlActionResponse } from '../common/index.js';
+
 import type { Filter } from '../model/model.js';
+import { seedStore } from '../store/devSeed.js';
 import { useLayerStore } from '../store/layerStore.js';
 import { FilterDetailsView } from './FilterDetailsView.js';
 import { LayerDetailsView } from './LayerDetailsView.js';
 import { MainView } from './MainView.js';
 
 export function DiagramVisibilityControl() {
-    // seedStore();
+    seedStore();
+    const { dispatchAction, listenAction } = useContext(VSCodeContext);
     const layers = useLayerStore(s => s.layers);
     const storeAddLayer = useLayerStore(s => s.addLayer);
     const storeToggle = useLayerStore(s => s.toggleLayer);
@@ -36,6 +46,20 @@ export function DiagramVisibilityControl() {
     const selectedElementIdsRef = useRef<{ id: string; name: string }[]>([]);
     const { listenAction } = useContext(VSCodeContext);
 
+    useEffect(() => {
+        listenAction(action => {
+            if (ExportStoreActionResponse.is(action)) {
+                console.log('Client ExportStoreActionResponse', action.success);
+            }
+            if (ImportStoreActionResponse.is(action)) {
+                console.log('Save in store');
+                const storeData = action.data;
+                console.log('storeData', storeData);
+                useLayerStore.setState(JSON.parse(typeof storeData === 'string' ? storeData : JSON.stringify(storeData)));
+                console.log('Store updated', useLayerStore.getState());
+            }
+        });
+    }, [listenAction]);
     /******************
     Main View Functions
     ******************/
@@ -61,10 +85,18 @@ export function DiagramVisibilityControl() {
 
     const uploadConfig = () => {
         console.log('uploadConfig clicked');
+        dispatchAction(RequestImportStoreAction.create({}));
     };
 
     const saveConfig = () => {
         console.log('saveConfig clicked');
+        const model = useLayerStore.getState().getModel(); // get current config
+        console.log('model', JSON.stringify(model, null, 2));
+        dispatchAction(
+            RequestExportStoreAction.create({
+                data: JSON.stringify(model, null, 2) // send actual data, not dummy string
+            })
+        );
     };
 
     const recomputeAll = () => {

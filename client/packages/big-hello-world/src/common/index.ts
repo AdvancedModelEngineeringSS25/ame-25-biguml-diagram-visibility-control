@@ -8,3 +8,4 @@
  **********************************************************************************/
 
 export * from './diagram-visibility-control.action.js';
+export * from './export-import-state.action.js';

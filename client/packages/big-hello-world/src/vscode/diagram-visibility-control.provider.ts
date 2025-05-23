@@ -12,6 +12,7 @@ import {
     DiagramVisibilityControlActionResponse,
     RequestDiagramVisibilityControlAction
 } from '../common/diagram-visibility-control.action.js';
+import { ExportStoreActionResponse, ImportStoreActionResponse } from '../common/index.js';
 
 export const DiagramVisibilityControlViewId = Symbol('DiagramVisibilityControlViewId');
 
@@ -22,8 +23,15 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
 
     protected override cssPath = ['diagram-visibility-control', 'bundle.css'];
     protected override jsPath = ['diagram-visibility-control', 'bundle.js'];
-    protected readonly actionCache = this.actionListener.createCache([DiagramVisibilityControlActionResponse.KIND]);
+
+    protected readonly actionCache = this.actionListener.createCache([
+        DiagramVisibilityControlActionResponse.KIND,
+        ExportStoreActionResponse.KIND,
+        ImportStoreActionResponse.KIND
+    ]);
+
     protected selectedIds?: string[];
+
 
     @postConstruct()
     protected override init(): void {
@@ -53,6 +61,8 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
             this.connectionManager.onNoActiveClient(() => {
                 // Send a message to the webview when there is no active client
                 this.webviewConnector.dispatch(DiagramVisibilityControlActionResponse.create());
+                this.webviewConnector.dispatch(ExportStoreActionResponse.create());
+                this.webviewConnector.dispatch(ImportStoreActionResponse.create());
             }),
             this.selectionService.onDidSelectionChange(() => {
                 this.selectedIds = this.selectionService.selection?.selectedElementsIDs;
@@ -61,12 +71,23 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
             this.connectionManager.onNoConnection(() => {
                 // Send a message to the webview when there is no glsp client
                 this.webviewConnector.dispatch(DiagramVisibilityControlActionResponse.create());
+                this.webviewConnector.dispatch(ExportStoreActionResponse.create());
+                this.webviewConnector.dispatch(ImportStoreActionResponse.create());
             }),
             this.modelState.onDidChangeModelState(() => {
                 this.requestCount();
             })
         );
     }
+    // protected requestExportSuccess(): void {
+    //     console.log('Report export success');
+    //     this.actionDispatcher.dispatch(
+    //         RequestExportStoreAction.create({
+
+    //         })
+    //     );
+
+    // }
 
     protected requestCount(): void {
         this.actionDispatcher.dispatch(

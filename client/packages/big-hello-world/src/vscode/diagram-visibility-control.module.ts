@@ -9,6 +9,7 @@
 
 import { TYPES } from '@borkdominik-biguml/big-vscode-integration/vscode';
 import { ContainerModule } from 'inversify';
+import { DiagramVisibilityControlActionHandler } from './diagram-visibility-control.handler.js';
 import { DiagramVisibilityControlProvider, DiagramVisibilityControlViewId } from './diagram-visibility-control.provider.js';
 import { DiagramVisibilityControlActionHandler } from './diagram-visibility-control.handler.js';
 import { ExtensionActionKind } from '@eclipse-glsp/vscode-integration-webview/lib/features/default/extension-action-handler.js';
@@ -31,6 +32,5 @@ export function DiagramVisibilityControlModule(viewId: string) {
         bind(TYPES.Disposable).toService(DiagramVisibilityControlActionHandler);
         bind(TYPES.RootInitialization).toService(DiagramVisibilityControlActionHandler);
         bind(ExtensionActionKind).toConstantValue(DiagramVisibilityControlActionResponse.KIND);
-
     });
 }

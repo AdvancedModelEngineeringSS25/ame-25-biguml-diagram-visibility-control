@@ -33,7 +33,6 @@ const sampleLayers: Layer[] = [
 
 export const seedStore = () => {
     // if (import.meta.env.MODE === 'development') {
-
     // push only if store is still empty
     if (useLayerStore.getState().layers.length === 0) {
         useLayerStore.setState({ layers: sampleLayers });
