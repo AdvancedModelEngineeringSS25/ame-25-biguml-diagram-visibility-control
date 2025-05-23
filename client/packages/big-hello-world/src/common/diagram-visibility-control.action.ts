@@ -7,6 +7,7 @@
  * SPDX-License-Identifier: MIT
  *********************************************************************************/
 
+import { type UMLSourceModel } from '@borkdominik-biguml/uml-protocol';
 import { Action, RequestAction, type ResponseAction } from '@eclipse-glsp/protocol';
 
 // ========= This action will be handled by the GLSP Client =========
@@ -14,6 +15,7 @@ import { Action, RequestAction, type ResponseAction } from '@eclipse-glsp/protoc
 export interface RequestDiagramVisibilityControlAction extends RequestAction<DiagramVisibilityControlActionResponse> {
     kind: typeof RequestDiagramVisibilityControlAction.KIND;
     increase: number;
+    model: any | Readonly<UMLSourceModel> | undefined;
     selectedElementIds?: string[];
 }
 
@@ -38,6 +40,8 @@ export namespace RequestDiagramVisibilityControlAction {
 export interface DiagramVisibilityControlActionResponse extends ResponseAction {
     kind: typeof DiagramVisibilityControlActionResponse.KIND;
     count: number;
+    model: any | Readonly<UMLSourceModel> | undefined;
+    // model: ReturnType<ReturnType<ExperimentalGLSPServerModelState['getModelState']>['getSourceModel']>;
     selectedElementIds?: { id: string; name: string }[];
 }
 export namespace DiagramVisibilityControlActionResponse {
@@ -53,6 +57,7 @@ export namespace DiagramVisibilityControlActionResponse {
         return {
             kind: KIND,
             responseId: '',
+            model: undefined,
             count: 0,
             ...options
         };

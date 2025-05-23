@@ -7,9 +7,11 @@
  * SPDX-License-Identifier: MIT
  **********************************************************************************/
 import { VSCodeContext } from '@borkdominik-biguml/big-components';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { DiagramVisibilityControlActionResponse } from '../common/index.js';
-import type { Filter } from '../model/model.js';
+import type { Element, ElementIdsPerLayer, Filter } from '../model/model.js';
+import type { IVisibilityService } from '../service/IVisibilityService.js';
+import { VisibilityService } from '../service/visibilityService.js';
 import { useLayerStore } from '../store/layerStore.js';
 import { FilterDetailsView } from './FilterDetailsView.js';
 import { LayerDetailsView } from './LayerDetailsView.js';
@@ -30,11 +32,17 @@ export function DiagramVisibilityControl() {
     const storeAddSelectedElements = useLayerStore(s => s.addSelectedElements);
     const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
     const [selectedFilterId, setSelectedFilterId] = useState<string | null>(null);
+    const [elementIdsPerLayer, setElementIdsPerLayer] = useState<ElementIdsPerLayer>({});
+    const [visibleElementIds, setVisibleElementIds] = useState<Element['id'][]>([]);
 
     const selectedLayer = layers.find(l => l.id === selectedLayerId) || null;
     const selectedFilter: Filter | null = selectedLayer?.filters.find(f => f.id === selectedFilterId) || null;
     const selectedElementIdsRef = useRef<{ id: string; name: string }[]>([]);
+    const model = useRef<Element[]>([]);
+    const visibilityService = useRef<IVisibilityService>(new VisibilityService());
     const { listenAction } = useContext(VSCodeContext);
+
+    useLayerStore();
 
     /******************
     Main View Functions
@@ -57,6 +65,8 @@ export function DiagramVisibilityControl() {
     const toggleActive = (id: string) => {
         console.log('toggleActive clicked', id);
         storeToggle(id);
+
+        recomputeVisibleElements(); // TODO: use to subscribe hook of layerStore
     };
 
     const uploadConfig = () => {
@@ -67,9 +77,30 @@ export function DiagramVisibilityControl() {
         console.log('saveConfig clicked');
     };
 
-    const recomputeAll = () => {
+    const recomputeVisibleElements = useCallback(() => {
+        const visbleElementIds = visibilityService.current.computeVisibleElementIds(elementIdsPerLayer, layers);
+        console.log('visbleElementIds', visbleElementIds);
+
+        setVisibleElementIds(visbleElementIds);
+    }, [elementIdsPerLayer, layers]);
+
+    const recomputeAll = useCallback(() => {
         console.log('recomputeAll clicked');
-    };
+
+        setElementIdsPerLayer(visibilityService.current.computeAffectedElementIdsPerLayer(model.current, layers));
+        console.log('elementIdsPerLayer', elementIdsPerLayer.current);
+
+        recomputeVisibleElements();
+    }, [layers, elementIdsPerLayer, recomputeVisibleElements]);
+
+    useEffect(() => {
+        recomputeVisibleElements();
+    }, [elementIdsPerLayer, recomputeVisibleElements]);
+
+    useEffect(() => {
+        recomputeAll();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const addLayer = () => {
         console.log('addLayer clicked');
@@ -152,6 +183,8 @@ export function DiagramVisibilityControl() {
         listenAction(action => {
             if (DiagramVisibilityControlActionResponse.is(action)) {
                 selectedElementIdsRef.current = action.selectedElementIds ?? [];
+                console.log(action.model);
+                model.current = action.model ?? [];
             }
         });
     }, [listenAction]);
@@ -188,16 +221,24 @@ export function DiagramVisibilityControl() {
     }
 
     return (
-        <MainView
-            layers={layers}
-            moveUp={moveUp}
-            moveDown={moveDown}
-            toggleActive={toggleActive}
-            goToDetails={setSelectedLayerId}
-            uploadConfig={uploadConfig}
-            saveConfig={saveConfig}
-            recomputeAll={recomputeAll}
-            addLayer={addLayer}
-        />
+        <>
+            <MainView
+                layers={layers}
+                moveUp={moveUp}
+                moveDown={moveDown}
+                toggleActive={toggleActive}
+                goToDetails={setSelectedLayerId}
+                uploadConfig={uploadConfig}
+                saveConfig={saveConfig}
+                recomputeAll={recomputeAll}
+                addLayer={addLayer}
+            />
+            <br />
+            <br />
+            <h2>Visible Element IDs</h2>
+            {visibleElementIds.map(item => (
+                <div key={item}>{item}</div>
+            ))}
+        </>
     );
 }
