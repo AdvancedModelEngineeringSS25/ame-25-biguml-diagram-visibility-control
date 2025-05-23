@@ -17,6 +17,7 @@ import {
 
 import { DiagramVisibilityControlActionResponse } from '../common/index.js';
 
+import { useContext, useEffect, useRef, useState } from 'react';
 import type { Filter } from '../model/model.js';
 import { seedStore } from '../store/devSeed.js';
 import { useLayerStore } from '../store/layerStore.js';
@@ -44,7 +45,6 @@ export function DiagramVisibilityControl() {
     const selectedLayer = layers.find(l => l.id === selectedLayerId) || null;
     const selectedFilter: Filter | null = selectedLayer?.filters.find(f => f.id === selectedFilterId) || null;
     const selectedElementIdsRef = useRef<{ id: string; name: string }[]>([]);
-    const { listenAction } = useContext(VSCodeContext);
 
     useEffect(() => {
         listenAction(action => {
