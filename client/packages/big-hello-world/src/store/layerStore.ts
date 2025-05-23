@@ -19,10 +19,14 @@ export interface LayerState {
     deleteLayer: (id: string) => void;
     reorderLayers: (from: number, to: number) => void;
     toggleLayer: (id: string) => void;
+  
+    addFilter: (layerId: string, newLayerType: 'type' | 'selection' | 'pattern', ) => Filter;
 
-    addFilter: (layerId: string, newLayerType: 'type' | 'selection' | 'pattern') => void;
     updateFilter: (layerId: string, filterId: string, f: Filter) => void;
     deleteFilter: (layerId: string, filterId: string) => void;
+
+    addSelectedElements: (layerId: string, filterId: string, elements: { id: string; name: string }[]) => void;
+    deleteSelectedElement: (layerId: string, filterId: string, elementId: string) => void;
 
     setConfiguration: (name: string) => void;
     // getVisibleElementIds: () => string[];
@@ -87,6 +91,7 @@ export const useLayerStore = create<LayerState>()(
                 set(state => ({
                     layers: state.layers.map(l => (l.id === layerId ? { ...l, filters: [...l.filters, f] } : l))
                 }));
+                return f;
             },
 
             updateFilter: (layerId, filterId, f) => {
@@ -112,6 +117,52 @@ export const useLayerStore = create<LayerState>()(
                               }
                             : l
                     )
+                }));
+            },
+
+            addSelectedElements: (layerId, filterId, elements) => {
+                set(state => ({
+                    layers: state.layers.map(layer => {
+                        if (layer.id !== layerId) return layer;
+                    
+                        return {
+                            ...layer,
+                            filters: layer.filters.map(filter => {
+                                if (filter.id !== filterId || filter.type !== 'selection') return filter;
+                            
+                                const selectionFilter = filter as SelectionFilter;
+                                const existingIds = new Set(selectionFilter.elements.map(e => e.id));
+                                const newElements = elements.filter(e => !existingIds.has(e.id));
+
+                                return {
+                                    ...selectionFilter,
+                                    elements: [...selectionFilter.elements, ...newElements]
+                                };
+                            })
+                        };
+                    })
+                }));
+            },
+
+
+            deleteSelectedElement: (layerId, filterId, elementId) => {
+                set(state => ({
+                    layers: state.layers.map(layer => {
+                        if (layer.id !== layerId) return layer;
+                    
+                        return {
+                            ...layer,
+                            filters: layer.filters.map(filter => {
+                                if (filter.id !== filterId || filter.type !== 'selection') return filter;
+                            
+                                const selectionFilter = filter as SelectionFilter;
+                                return {
+                                    ...selectionFilter,
+                                    elements: selectionFilter.elements.filter(e => e.id !== elementId)
+                                };
+                            })
+                        };
+                    })
                 }));
             },
 

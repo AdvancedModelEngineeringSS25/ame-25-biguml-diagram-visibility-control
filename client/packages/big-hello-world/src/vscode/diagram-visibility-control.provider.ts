@@ -23,11 +23,15 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
 
     protected override cssPath = ['diagram-visibility-control', 'bundle.css'];
     protected override jsPath = ['diagram-visibility-control', 'bundle.js'];
+
     protected readonly actionCache = this.actionListener.createCache([
         DiagramVisibilityControlActionResponse.KIND,
         ExportStoreActionResponse.KIND,
         ImportStoreActionResponse.KIND
     ]);
+
+    protected selectedIds?: string[];
+
 
     @postConstruct()
     protected override init(): void {
@@ -40,7 +44,12 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
         super.handleConnection();
 
         this.toDispose.push(
-            this.actionCache.onDidChange(message => this.webviewConnector.dispatch(message)),
+            this.actionCache.onDidChange(message => {
+                this.webviewConnector.dispatch(message);
+                if (DiagramVisibilityControlActionResponse.is(message)) {
+                   // this.selectedIds = message.selectedElementIds ?? [];
+                }
+            }),
             this.webviewConnector.onReady(() => {
                 this.requestCount();
                 this.webviewConnector.dispatch(this.actionCache.getActions());
@@ -54,6 +63,10 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
                 this.webviewConnector.dispatch(DiagramVisibilityControlActionResponse.create());
                 this.webviewConnector.dispatch(ExportStoreActionResponse.create());
                 this.webviewConnector.dispatch(ImportStoreActionResponse.create());
+            }),
+            this.selectionService.onDidSelectionChange(() => {
+                this.selectedIds = this.selectionService.selection?.selectedElementsIDs;
+                this.requestCount();
             }),
             this.connectionManager.onNoConnection(() => {
                 // Send a message to the webview when there is no glsp client
@@ -79,7 +92,8 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
     protected requestCount(): void {
         this.actionDispatcher.dispatch(
             RequestDiagramVisibilityControlAction.create({
-                increase: 0
+                increase: 0,
+                selectedElementIds: this.selectedIds ?? []
             })
         );
     }

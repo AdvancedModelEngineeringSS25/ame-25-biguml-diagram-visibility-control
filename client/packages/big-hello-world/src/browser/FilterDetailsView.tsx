@@ -18,14 +18,14 @@ export function FilterDetailsView({
     onChangeName,
     toggleSelectedType,
     deleteSelectedElement,
-    startSelection
+    addSelection
 }: {
     filter: Filter;
     onBack: () => void;
     onChangeName: (name: string) => void;
     toggleSelectedType: (id: string) => void;
     deleteSelectedElement: (id: string) => void;
-    startSelection: (id: string) => void;
+    addSelection: (id: string) => void;
 }) {
     return (
         <div className='flex flex-col gap-4'>
@@ -46,7 +46,7 @@ export function FilterDetailsView({
             {filter.type === 'type' && <TypeFilterEditor filter={filter} toggleSelectedType={toggleSelectedType} />}
             {filter.type === 'pattern' && <PatternFilterEditor filter={filter} toggleSelectedType={toggleSelectedType} />}
             {filter.type === 'selection' && (
-                <SelectionFilterEditor filter={filter} deleteSelectedElement={deleteSelectedElement} startSelection={startSelection} />
+                <SelectionFilterEditor filter={filter} deleteSelectedElement={deleteSelectedElement} addSelection={addSelection} />
             )}
         </div>
     );
