@@ -63,7 +63,8 @@ export function DiagramVisibilityControl() {
         });
     }, [listenAction]);
 
-    const model = useRef<Element[]>([]);
+    const [model, setModel] = useState<Element[]>([]);
+    const [modelLoaded, setModelLoaded] = useState<boolean>(false);
     const visibilityService = useRef<IVisibilityService>(new VisibilityService());
 
     useLayerStore();
@@ -119,20 +120,24 @@ export function DiagramVisibilityControl() {
     const recomputeAll = useCallback(() => {
         console.log('recomputeAll clicked');
 
-        setElementIdsPerLayer(visibilityService.current.computeAffectedElementIdsPerLayer(model.current, layers));
+        setElementIdsPerLayer(visibilityService.current.computeAffectedElementIdsPerLayer(model, layers));
         console.log('elementIdsPerLayer', elementIdsPerLayer.current);
 
         recomputeVisibleElements();
-    }, [layers, elementIdsPerLayer, recomputeVisibleElements]);
+    }, [layers, elementIdsPerLayer, recomputeVisibleElements, model]);
 
     useEffect(() => {
         recomputeVisibleElements();
     }, [elementIdsPerLayer, recomputeVisibleElements]);
 
     useEffect(() => {
+        console.log({ modelLoaded });
+
+        if (!modelLoaded) return;
+
         recomputeAll();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [modelLoaded]);
 
     const addLayer = () => {
         console.log('addLayer clicked');
@@ -246,10 +251,14 @@ export function DiagramVisibilityControl() {
             if (DiagramVisibilityControlActionResponse.is(action)) {
                 selectedElementIdsRef.current = action.selectedElementIds ?? [];
                 console.log(action.model);
-                model.current = action.model ?? [];
+                setModel(action.model ?? []);
+
+                if (!modelLoaded && action.model && action.model.length > 0) {
+                    setModelLoaded(true);
+                }
             }
         });
-    }, [listenAction]);
+    }, [listenAction, setModelLoaded, modelLoaded]);
 
     /*********
         Navigation
