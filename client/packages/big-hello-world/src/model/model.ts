@@ -16,7 +16,7 @@ export type Element = {
 
 export type ElementId = Element['id'];
 
-export type ElementIdsPerLayer = Record<Layer['id'], ElementId[]>;
+export type ElementIdsPerLayer = Record<Layer['id'] | 'default', ElementId[]>;
 
 interface FilterBase {
     id: string;
@@ -36,7 +36,7 @@ export type PatternFilter = FilterBase & {
 
 export type SelectionFilter = FilterBase & {
     type: 'selection';
-    elements: { id: string; name: string }[];
+    elements: { id: string; name?: string }[];
 };
 
 export type Filter = TypeFilter | SelectionFilter | PatternFilter;

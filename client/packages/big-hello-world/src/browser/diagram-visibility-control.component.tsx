@@ -20,14 +20,13 @@ import { DiagramVisibilityControlActionResponse } from '../common/index.js';
 import type { Element, ElementIdsPerLayer, Filter } from '../model/model.js';
 import type { IVisibilityService } from '../service/IVisibilityService.js';
 import { VisibilityService } from '../service/visibilityService.js';
-import { seedStore } from '../store/devSeed.js';
 import { useLayerStore } from '../store/layerStore.js';
 import { FilterDetailsView } from './FilterDetailsView.js';
 import { LayerDetailsView } from './LayerDetailsView.js';
 import { MainView } from './MainView.js';
 
 export function DiagramVisibilityControl() {
-    seedStore();
+    // seedStore();
     const { dispatchAction, listenAction } = useContext(VSCodeContext);
     const layers = useLayerStore(s => s.layers);
     const storeAddLayer = useLayerStore(s => s.addLayer);
@@ -303,9 +302,14 @@ export function DiagramVisibilityControl() {
             <br />
             <br />
             <h2>Visible Element IDs</h2>
-            {visibleElementIds.map(item => (
-                <div key={item}>{item}</div>
-            ))}
+            {visibleElementIds.map(item => {
+                const isNotTargetedByLayer = elementIdsPerLayer['default'].includes(item);
+                return (
+                    <div key={item} style={{ opacity: isNotTargetedByLayer ? 0.5 : 1 }}>
+                        {item}
+                    </div>
+                );
+            })}
         </>
     );
 }

@@ -32,7 +32,7 @@ export function PatternFilterEditor({
                 }}
                 value={filter.pattern}
             />
-
+            <small style={{ marginBlockStart: '0.5em' }}>If your input starts with &apos;/&apos; it is parsed as RegEx</small> <br />
             <label>Types:</label>
             <div>
                 {ALL_TYPES.map((type, index) => (

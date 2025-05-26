@@ -31,6 +31,8 @@ export class VisibilityService implements IVisibilityService {
             elementIdsPerLayer[layer.id] = affectedElementIds;
         }
 
+        elementIdsPerLayer['default'] = elements.map(element => element.id).filter(id => !seenIds.includes(id));
+
         return elementIdsPerLayer;
     }
 
@@ -79,9 +81,37 @@ export class VisibilityService implements IVisibilityService {
         return [...affectedElementIds];
     }
 
-    computeAffectedElementIdsForPatternFilter(_elements: Element[], _filter: PatternFilter): ElementId[] {
-        // throw new Error('Method not implemented.');
-        return [];
+    computeAffectedElementIdsForPatternFilter(elements: Element[], filter: PatternFilter): ElementId[] {
+        const affectedElementIds = new Set<ElementId>();
+        const matcher = this.match(filter.pattern);
+
+        for (const element of elements) {
+            if (element.name && matcher(element.name)) {
+                affectedElementIds.add(element.id);
+            }
+        }
+
+        return [...affectedElementIds];
+    }
+
+    match(input: string): (text: string) => boolean {
+        if (input.startsWith('/') && input.lastIndexOf('/') > 0) {
+            // Try to parse the regex
+            const lastSlash = input.lastIndexOf('/');
+            const pattern = input.slice(1, lastSlash);
+            const flags = input.slice(lastSlash + 1);
+
+            try {
+                const regex = new RegExp(pattern, flags);
+                return (text: string) => regex.test(text);
+            } catch (e) {
+                console.error('Invalid regex:', e.message);
+                return () => false;
+            }
+        } else {
+            const normalized = input.toLowerCase();
+            return (text: string) => text.toLowerCase().includes(normalized);
+        }
     }
 
     computeAffectedElementIdsForSelectionFilter(elements: Element[], filter: SelectionFilter): ElementId[] {
@@ -97,8 +127,8 @@ export class VisibilityService implements IVisibilityService {
         return [...affectedElementIds];
     }
 
-    computeVisibleElementIds(elementIds: ElementIdsPerLayer, layers: Layer[]): ElementId[] {
-        const visibleElementIds = new Set<ElementId>();
+    computeVisibleElementIds({ default: remainingElements, ...elementIds }: ElementIdsPerLayer, layers: Layer[]): ElementId[] {
+        const visibleElementIds = new Set<ElementId>(remainingElements);
 
         for (const layer of layers) {
             const layerElementIds = elementIds[layer.id];

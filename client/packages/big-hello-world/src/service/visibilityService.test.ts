@@ -7,7 +7,14 @@
  * SPDX-License-Identifier: MIT
  **********************************************************************************/
 import { describe, expect, it } from 'vitest';
-import { type Element, type ElementIdsPerLayer, type Layer, type SelectionFilter, type TypeFilter } from '../model/model.js';
+import {
+    type Element,
+    type ElementIdsPerLayer,
+    type Layer,
+    type PatternFilter,
+    type SelectionFilter,
+    type TypeFilter
+} from '../model/model.js';
 import { type IVisibilityService } from './IVisibilityService.js';
 import { VisibilityService } from './visibilityService.js';
 
@@ -42,7 +49,7 @@ describe('VisiblityService', () => {
                 constructElement({ id: '5' })
             ];
 
-            const selectedElementIds = ['1', '2', '3'];
+            const selectedElementIds = [{ id: '1' }, { id: '2' }, { id: '3' }];
 
             const filter: SelectionFilter = {
                 ...filterBase,
@@ -51,13 +58,13 @@ describe('VisiblityService', () => {
 
             const affectedElementIds = visibilityService.computeAffectedElementIdsForSelectionFilter(elements, filter);
 
-            expect(affectedElementIds).toStrictEqual(selectedElementIds);
+            expect(affectedElementIds).toStrictEqual(['1', '2', '3']);
         });
 
         it('should not return elementIds that are not existing', async () => {
             const elements: Element[] = [constructElement({ id: '1' }), constructElement({ id: '2' }), constructElement({ id: '3' })];
 
-            const selectedElementIds = ['0', '4'];
+            const selectedElementIds = [{ id: '0' }, { id: '4' }];
 
             const filter: SelectionFilter = {
                 ...filterBase,
@@ -78,7 +85,7 @@ describe('VisiblityService', () => {
                 constructElement({ id: '5' })
             ];
 
-            const selectedElementIds: string[] = [];
+            const selectedElementIds = [];
 
             const filter: SelectionFilter = {
                 ...filterBase,
@@ -93,7 +100,7 @@ describe('VisiblityService', () => {
         it('should return empty array if no elements are present', async () => {
             const elements: Element[] = [];
 
-            const selectedElementIds: string[] = [];
+            const selectedElementIds = [];
 
             const filter: SelectionFilter = {
                 ...filterBase,
@@ -116,17 +123,17 @@ describe('VisiblityService', () => {
         // we assume that the implementation is correct if it works for one type and therfore only test the type 'class'
         it('should return elementIds for matching single type', async () => {
             const elements: Element[] = [
-                constructElement({ id: '1', type: 'class' }),
-                constructElement({ id: '2', type: 'interface' }),
-                constructElement({ id: '3', type: 'property' }),
-                constructElement({ id: '4', type: 'relation' }),
-                constructElement({ id: '5', type: 'method' }),
-                constructElement({ id: '6', type: 'class' })
+                constructElement({ id: '1', type: 'Class' }),
+                constructElement({ id: '2', type: 'Interface' }),
+                constructElement({ id: '3', type: 'OwnedAttribute' }),
+                constructElement({ id: '4', type: 'UMLUsage' }),
+                constructElement({ id: '5', type: 'OwnedOperation' }),
+                constructElement({ id: '6', type: 'Class' })
             ];
 
             const filter: TypeFilter = {
                 ...filterBase,
-                types: ['class']
+                types: ['Class']
             };
 
             const affectedElementIds = visibilityService.computeAffectedElementIdsForTypeFilter(elements, filter);
@@ -136,17 +143,17 @@ describe('VisiblityService', () => {
 
         it('should return elementIds for matching multiple types', async () => {
             const elements: Element[] = [
-                constructElement({ id: '1', type: 'class' }),
-                constructElement({ id: '2', type: 'interface' }),
-                constructElement({ id: '3', type: 'property' }),
-                constructElement({ id: '4', type: 'relation' }),
-                constructElement({ id: '5', type: 'method' }),
-                constructElement({ id: '6', type: 'class' })
+                constructElement({ id: '1', type: 'Class' }),
+                constructElement({ id: '2', type: 'Interface' }),
+                constructElement({ id: '3', type: 'OwnedAttribute' }),
+                constructElement({ id: '4', type: 'UMLUsage' }),
+                constructElement({ id: '5', type: 'OwnedOperation' }),
+                constructElement({ id: '6', type: 'Class' })
             ];
 
             const filter: TypeFilter = {
                 ...filterBase,
-                types: ['class', 'interface']
+                types: ['Class', 'Interface']
             };
 
             const affectedElementIds = visibilityService.computeAffectedElementIdsForTypeFilter(elements, filter);
@@ -159,7 +166,7 @@ describe('VisiblityService', () => {
 
             const filter: TypeFilter = {
                 ...filterBase,
-                types: ['class']
+                types: ['Class']
             };
 
             const affectedElementIds = visibilityService.computeAffectedElementIdsForTypeFilter(elements, filter);
@@ -169,16 +176,16 @@ describe('VisiblityService', () => {
 
         it('should return empty array if no elements are matching the type', async () => {
             const elements: Element[] = [
-                constructElement({ id: '1', type: 'interface' }),
-                constructElement({ id: '2', type: 'interface' }),
-                constructElement({ id: '3', type: 'property' }),
-                constructElement({ id: '4', type: 'relation' }),
-                constructElement({ id: '5', type: 'method' })
+                constructElement({ id: '1', type: 'Interface' }),
+                constructElement({ id: '2', type: 'Interface' }),
+                constructElement({ id: '3', type: 'OwnedAttribute' }),
+                constructElement({ id: '4', type: 'UMLUsage' }),
+                constructElement({ id: '5', type: 'OwnedOperation' })
             ];
 
             const filter: TypeFilter = {
                 ...filterBase,
-                types: ['class']
+                types: ['Class']
             };
 
             const affectedElementIds = visibilityService.computeAffectedElementIdsForTypeFilter(elements, filter);
@@ -188,11 +195,11 @@ describe('VisiblityService', () => {
 
         it('should return empty array if no types are present', async () => {
             const elements: Element[] = [
-                constructElement({ id: '1', type: 'interface' }),
-                constructElement({ id: '2', type: 'interface' }),
-                constructElement({ id: '3', type: 'property' }),
-                constructElement({ id: '4', type: 'relation' }),
-                constructElement({ id: '5', type: 'method' })
+                constructElement({ id: '1', type: 'Interface' }),
+                constructElement({ id: '2', type: 'Interface' }),
+                constructElement({ id: '3', type: 'OwnedAttribute' }),
+                constructElement({ id: '4', type: 'UMLUsage' }),
+                constructElement({ id: '5', type: 'OwnedOperation' })
             ];
 
             const filter: TypeFilter = {
@@ -236,7 +243,7 @@ describe('VisiblityService', () => {
                     filters: [
                         {
                             ...filterBase,
-                            elements: ['1', '2', '3']
+                            elements: [{ id: '1' }, { id: '2' }, { id: '3' }]
                         }
                     ]
                 },
@@ -247,7 +254,7 @@ describe('VisiblityService', () => {
                     filters: [
                         {
                             ...filterBase,
-                            elements: ['2']
+                            elements: [{ id: '2' }]
                         }
                     ]
                 },
@@ -258,7 +265,7 @@ describe('VisiblityService', () => {
                     filters: [
                         {
                             ...filterBase,
-                            elements: ['4']
+                            elements: [{ id: '4' }]
                         }
                     ]
                 },
@@ -269,7 +276,7 @@ describe('VisiblityService', () => {
                     filters: [
                         {
                             ...filterBase,
-                            elements: ['3']
+                            elements: [{ id: '3' }]
                         }
                     ]
                 }
@@ -294,7 +301,7 @@ describe('VisiblityService', () => {
                     filters: [
                         {
                             ...filterBase,
-                            elements: ['1', '2', '3']
+                            elements: [{ id: '1' }, { id: '2' }, { id: '3' }]
                         }
                     ]
                 }
@@ -305,14 +312,16 @@ describe('VisiblityService', () => {
             expect(elementIdsPerLayer['1']).toStrictEqual([]);
         });
 
-        it('should return empty object if no layers are present', async () => {
+        it('should return only default object with all elements if no layers are present', async () => {
             const elements: Element[] = [constructElement({ id: '1' }), constructElement({ id: '2' }), constructElement({ id: '3' })];
 
             const layers: Layer[] = [];
 
             const elementIdsPerLayer = visibilityService.computeAffectedElementIdsPerLayer(elements, layers);
 
-            expect(elementIdsPerLayer).toStrictEqual({});
+            expect(elementIdsPerLayer).toStrictEqual({
+                default: ['1', '2', '3']
+            });
         });
     });
 
@@ -405,11 +414,11 @@ describe('VisiblityService', () => {
 
         it('should only return intersection of filters', async () => {
             const elements = [
-                constructElement({ id: '1', type: 'class' }),
-                constructElement({ id: '2', type: 'property' }),
-                constructElement({ id: '3', type: 'class' }),
-                constructElement({ id: '4', type: 'property' }),
-                constructElement({ id: '5', type: 'property' })
+                constructElement({ id: '1', type: 'Class' }),
+                constructElement({ id: '2', type: 'OwnedAttribute' }),
+                constructElement({ id: '3', type: 'Class' }),
+                constructElement({ id: '4', type: 'OwnedAttribute' }),
+                constructElement({ id: '5', type: 'OwnedAttribute' })
             ];
 
             const layer: Layer = {
@@ -419,13 +428,13 @@ describe('VisiblityService', () => {
                         id: '1',
                         name: 'filter 1',
                         type: 'selection',
-                        elements: ['2', '3']
+                        elements: [{ id: '2' }, { id: '3' }]
                     },
                     {
                         id: '2',
                         name: 'filter 2',
                         type: 'type',
-                        types: ['class']
+                        types: ['Class']
                     }
                 ]
             };
@@ -445,7 +454,7 @@ describe('VisiblityService', () => {
                         id: '1',
                         name: 'filter 1',
                         type: 'selection',
-                        elements: ['2', '3']
+                        elements: [{ id: '2' }, { id: '3' }]
                     }
                 ]
             };
@@ -457,11 +466,11 @@ describe('VisiblityService', () => {
 
         it('should return empty array if no filters are present', async () => {
             const elements: Element[] = [
-                constructElement({ id: '1', type: 'class' }),
-                constructElement({ id: '2', type: 'property' }),
-                constructElement({ id: '3', type: 'class' }),
-                constructElement({ id: '4', type: 'property' }),
-                constructElement({ id: '5', type: 'property' })
+                constructElement({ id: '1', type: 'Class' }),
+                constructElement({ id: '2', type: 'OwnedAttribute' }),
+                constructElement({ id: '3', type: 'Class' }),
+                constructElement({ id: '4', type: 'OwnedAttribute' }),
+                constructElement({ id: '5', type: 'OwnedAttribute' })
             ];
 
             const layer: Layer = {
@@ -476,11 +485,11 @@ describe('VisiblityService', () => {
 
         it('should return empty array if no filters are matching', async () => {
             const elements: Element[] = [
-                constructElement({ id: '1', type: 'class' }),
-                constructElement({ id: '2', type: 'property' }),
-                constructElement({ id: '3', type: 'class' }),
-                constructElement({ id: '4', type: 'property' }),
-                constructElement({ id: '5', type: 'property' })
+                constructElement({ id: '1', type: 'Class' }),
+                constructElement({ id: '2', type: 'OwnedAttribute' }),
+                constructElement({ id: '3', type: 'Class' }),
+                constructElement({ id: '4', type: 'OwnedAttribute' }),
+                constructElement({ id: '5', type: 'OwnedAttribute' })
             ];
 
             const layer: Layer = {
@@ -490,7 +499,7 @@ describe('VisiblityService', () => {
                         id: '1',
                         name: 'filter 1',
                         type: 'selection',
-                        elements: ['6']
+                        elements: [{ id: '6' }]
                     }
                 ]
             };
@@ -498,6 +507,123 @@ describe('VisiblityService', () => {
             const visibleElementIds = visibilityService.computeAffectedElementIdsForLayer(elements, layer);
 
             expect(visibleElementIds).toStrictEqual([]);
+        });
+    });
+
+    describe('computeAffectedElementIdsForPatternFilter', () => {
+        // pattern filters can filter for "text" or "RegEx", we test both
+        const filterBase: Omit<PatternFilter, 'pattern'> = {
+            id: '1',
+            name: 'filter 1',
+            type: 'pattern'
+        };
+
+        it('should return elementIds for matching RegEx pattern', async () => {
+            const elements: Element[] = [
+                constructElement({ id: '1', name: 'Class A' }),
+                constructElement({ id: '2', name: 'Class B' }),
+                constructElement({ id: '3', name: 'Interface C' }),
+                constructElement({ id: '4', name: 'Enumeration D' }),
+                constructElement({ id: '5', name: 'PrimitiveType E' })
+            ];
+
+            const filter: PatternFilter = {
+                ...filterBase,
+                pattern: '/Class/'
+            };
+
+            const affectedElementIds = visibilityService.computeAffectedElementIdsForPatternFilter(elements, filter);
+
+            expect(affectedElementIds).toStrictEqual(['1', '2']);
+        });
+
+        it('should return elementIds for matching text pattern', async () => {
+            const elements: Element[] = [
+                constructElement({ id: '1', name: 'Class A' }),
+                constructElement({ id: '2', name: 'Class B' }),
+                constructElement({ id: '3', name: 'Interface C' }),
+                constructElement({ id: '4', name: 'Enumeration D' }),
+                constructElement({ id: '5', name: 'PrimitiveType E' })
+            ];
+
+            const filter: PatternFilter = {
+                ...filterBase,
+                pattern: 'Class'
+            };
+
+            const affectedElementIds = visibilityService.computeAffectedElementIdsForPatternFilter(elements, filter);
+
+            expect(affectedElementIds).toStrictEqual(['1', '2']);
+        });
+
+        it('should return empty array if no elements are present', async () => {
+            const elements: Element[] = [];
+
+            const filter: PatternFilter = {
+                ...filterBase,
+                pattern: 'Class'
+            };
+
+            const affectedElementIds = visibilityService.computeAffectedElementIdsForPatternFilter(elements, filter);
+
+            expect(affectedElementIds).toStrictEqual([]);
+        });
+
+        it('should return empty array if no elements are matching the text pattern', async () => {
+            const elements: Element[] = [
+                constructElement({ id: '1', name: 'Class A' }),
+                constructElement({ id: '2', name: 'Class B' }),
+                constructElement({ id: '3', name: 'Interface C' }),
+                constructElement({ id: '4', name: 'Enumeration D' }),
+                constructElement({ id: '5', name: 'PrimitiveType E' })
+            ];
+
+            const filter: PatternFilter = {
+                ...filterBase,
+                pattern: 'NonMatchingPattern'
+            };
+
+            const affectedElementIds = visibilityService.computeAffectedElementIdsForPatternFilter(elements, filter);
+
+            expect(affectedElementIds).toStrictEqual([]);
+        });
+
+        it('should return empty array if no elements are matching the RegEx pattern', async () => {
+            const elements: Element[] = [
+                constructElement({ id: '1', name: 'Class A' }),
+                constructElement({ id: '2', name: 'Class B' }),
+                constructElement({ id: '3', name: 'Interface C' }),
+                constructElement({ id: '4', name: 'Enumeration D' }),
+                constructElement({ id: '5', name: 'PrimitiveType E' })
+            ];
+
+            const filter: PatternFilter = {
+                ...filterBase,
+                pattern: '/NonMatchingPattern/'
+            };
+
+            const affectedElementIds = visibilityService.computeAffectedElementIdsForPatternFilter(elements, filter);
+
+            expect(affectedElementIds).toStrictEqual([]);
+        });
+
+        it('should handle invalid RegEx patterns gracefully', async () => {
+            const elements: Element[] = [
+                constructElement({ id: '1', name: 'Class A' }),
+                constructElement({ id: '2', name: 'Class B' }),
+                constructElement({ id: '3', name: 'Interface C' }),
+                constructElement({ id: '4', name: 'Enumeration D' }),
+                constructElement({ id: '5', name: 'PrimitiveType E' })
+            ];
+
+            const filter: PatternFilter = {
+                ...filterBase,
+                pattern: '/[a-z/' // Invalid RegEx
+            };
+
+            const affectedElementIds = visibilityService.computeAffectedElementIdsForPatternFilter(elements, filter);
+
+            expect(affectedElementIds).toStrictEqual([]);
         });
     });
 });
