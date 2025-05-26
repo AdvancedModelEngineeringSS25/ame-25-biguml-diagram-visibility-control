@@ -10,6 +10,7 @@
 export type Element = {
     id: string;
     type: Type;
+    name?: string;
     children?: Element[];
 };
 
@@ -52,5 +53,24 @@ export interface Layer {
     styleClass?: string;
 }
 
-export const ALL_TYPES = ['class', 'property', 'relation', 'method', 'interface'] as const;
+// export const ALL_TYPES = ['class', 'property', 'relation', 'method', 'interface'] as const;
+
+export const ALL_TYPES = [
+    'Class',
+    'Interface',
+    'Enumeration',
+    'PrimitiveType',
+    'EnumerationLiteral',
+    'OwnedAttribute',
+    'OwnedOperation',
+    'OwnedParameter',
+    'EObjectReference',
+    'LiteralInteger',
+    'LiteralUnlimitedNatural',
+    'UMLInterfaceRealization',
+    'UMLUsage',
+    'UMLSourceModel',
+    'EObject'
+] as const;
+
 export type Type = (typeof ALL_TYPES)[number];

@@ -47,7 +47,7 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
             this.actionCache.onDidChange(message => {
                 this.webviewConnector.dispatch(message);
                 if (DiagramVisibilityControlActionResponse.is(message)) {
-                   // this.selectedIds = message.selectedElementIds ?? [];
+                    // this.selectedIds = message.selectedElementIds ?? [];
                 }
             }),
             this.webviewConnector.onReady(() => {
@@ -93,6 +93,7 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
         this.actionDispatcher.dispatch(
             RequestDiagramVisibilityControlAction.create({
                 increase: 0,
+                model: this.modelState.getModelState(),
                 selectedElementIds: this.selectedIds ?? []
             })
         );

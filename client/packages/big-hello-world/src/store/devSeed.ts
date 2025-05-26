@@ -17,9 +17,17 @@ const sampleLayers: Layer[] = [
         visible: true,
         zIndex: 1,
         filters: [
-            { id: '1', name: 'filter 1', type: 'type', types: ['property', 'relation'] },
-            { id: '2', name: 'filter 2', type: 'pattern', pattern: 'hello', types: ['property'] },
-            { id: '3', name: 'filter 3', type: 'selection', elements: [{id: "1", name: "2"}, {id: "3", name: "4"}] }
+            { id: '1', name: 'filter 1', type: 'type', types: ['OwnedAttribute', 'UMLUsage'] },
+            { id: '2', name: 'filter 2', type: 'pattern', pattern: 'hello', types: ['OwnedAttribute'] },
+            {
+                id: '3',
+                name: 'filter 3',
+                type: 'selection',
+                elements: [
+                    { id: '1', name: '2' },
+                    { id: '3', name: '4' }
+                ]
+            }
         ]
     },
     {
@@ -27,7 +35,7 @@ const sampleLayers: Layer[] = [
         name: 'Layer 2',
         visible: false,
         zIndex: 2,
-        filters: [{ id: '4', name: 'filter 4', type: 'type', types: ['class'] }]
+        filters: [{ id: '4', name: 'filter 4', type: 'type', types: ['Class'] }]
     }
 ];
 

@@ -17,6 +17,8 @@ export class VisibilityService implements IVisibilityService {
 
         const sortedLayers = layers.sort((a, b) => b.zIndex - a.zIndex);
 
+        console.log('sortedLayers', sortedLayers);
+
         for (const layer of sortedLayers) {
             const layerElementIds = this.computeAffectedElementIdsForLayer(elements, layer);
 
@@ -63,6 +65,8 @@ export class VisibilityService implements IVisibilityService {
     }
 
     computeAffectedElementIdsForTypeFilter(elements: Element[], filter: TypeFilter): ElementId[] {
+        console.log(elements, filter);
+
         const types = filter.types;
         const affectedElementIds = new Set<ElementId>();
 
@@ -75,8 +79,9 @@ export class VisibilityService implements IVisibilityService {
         return [...affectedElementIds];
     }
 
-    computeAffectedElementIdsForPatternFilter(elements: Element[], filter: PatternFilter): ElementId[] {
-        throw new Error('Method not implemented.');
+    computeAffectedElementIdsForPatternFilter(_elements: Element[], _filter: PatternFilter): ElementId[] {
+        // throw new Error('Method not implemented.');
+        return [];
     }
 
     computeAffectedElementIdsForSelectionFilter(elements: Element[], filter: SelectionFilter): ElementId[] {
@@ -84,7 +89,7 @@ export class VisibilityService implements IVisibilityService {
         const affectedElementIds = new Set<ElementId>();
 
         for (const element of elements) {
-            if (selectedElementIds.includes(element.id)) {
+            if (selectedElementIds.some(item => item.id === element.id)) {
                 affectedElementIds.add(element.id);
             }
         }
