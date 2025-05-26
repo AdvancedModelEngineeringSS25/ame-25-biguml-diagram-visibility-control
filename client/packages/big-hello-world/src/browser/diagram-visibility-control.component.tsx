@@ -227,7 +227,7 @@ export function DiagramVisibilityControl() {
 
         const updatedFilter: Filter = {
             ...filter,
-            types: Array.from(typesSet) as ('class' | 'property' | 'relation' | 'method' | 'interface')[]
+            types: Array.from(typesSet) as any
         };
 
         storeUpdateFilter(layerId, filterId, updatedFilter);
