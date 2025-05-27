@@ -34,34 +34,36 @@ export function MainView({
         <div id='main-view'>
             <div id='layer-list'>
                 <h2>Layers</h2>
-                {layers.map(layer => (
-                    <div key={layer.id} id='layer' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
-                        <span style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
-                            {layer.name} {layer.zIndex}
-                        </span>
-                        <div
-                            id='layer-buttons'
-                            style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center', marginLeft: 'auto' }}
-                        >
-                            <VSCodeButton slot='anchor' appearance='icon' onClick={() => moveUp(layer.id)}>
-                                <div className='codicon codicon-chevron-up'></div>
-                            </VSCodeButton>
-                            <VSCodeButton slot='anchor' appearance='icon' onClick={() => moveDown(layer.id)}>
-                                <div className='codicon codicon-chevron-down'></div>
-                            </VSCodeButton>
-                            <VSCodeButton slot='anchor' appearance='icon' onClick={() => toggleActive(layer.id)}>
-                                {layer.visible ? (
-                                    <div className='codicon codicon-eye'></div>
-                                ) : (
-                                    <div className='codicon codicon-eye-closed'></div>
-                                )}
-                            </VSCodeButton>
-                            <VSCodeButton slot='anchor' appearance='icon' onClick={() => goToDetails(layer.id)}>
-                                <div className='codicon codicon-chevron-right'></div>
-                            </VSCodeButton>
+                {[...layers]
+                    .sort((a, b) => a.zIndex - b.zIndex)
+                    .map(layer => (
+                        <div key={layer.id} id='layer' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
+                            <span style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
+                                {layer.name} {layer.zIndex}
+                            </span>
+                            <div
+                                id='layer-buttons'
+                                style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center', marginLeft: 'auto' }}
+                            >
+                                <VSCodeButton slot='anchor' appearance='icon' onClick={() => moveUp(layer.id)}>
+                                    <div className='codicon codicon-chevron-up'></div>
+                                </VSCodeButton>
+                                <VSCodeButton slot='anchor' appearance='icon' onClick={() => moveDown(layer.id)}>
+                                    <div className='codicon codicon-chevron-down'></div>
+                                </VSCodeButton>
+                                <VSCodeButton slot='anchor' appearance='icon' onClick={() => toggleActive(layer.id)}>
+                                    {layer.visible ? (
+                                        <div className='codicon codicon-eye'></div>
+                                    ) : (
+                                        <div className='codicon codicon-eye-closed'></div>
+                                    )}
+                                </VSCodeButton>
+                                <VSCodeButton slot='anchor' appearance='icon' onClick={() => goToDetails(layer.id)}>
+                                    <div className='codicon codicon-chevron-right'></div>
+                                </VSCodeButton>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
             </div>
             <br />
             <VSCodeDivider />

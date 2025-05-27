@@ -206,8 +206,8 @@ export function DiagramVisibilityControl() {
     };
 
     const toggleSelectedType = (layerId: string, filterId: string, type: string) => {
-        const allowedTypes = ['class', 'property', 'relation', 'method', 'interface'];
-        if (!allowedTypes.includes(type)) return;
+        // const allowedTypes = ['class', 'property', 'relation', 'method', 'interface'];
+        // if (!allowedTypes.includes(type)) return;
 
         const layer = useLayerStore.getState().layers.find(l => l.id === layerId);
         if (!layer) return;
