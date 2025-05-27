@@ -27,11 +27,12 @@
 // use this block to use vs-code handler
 import { FeatureModule } from '@eclipse-glsp/client';
 import { ExtensionActionKind } from '@eclipse-glsp/vscode-integration-webview';
-import { DiagramVisibilityControlActionResponse } from '../common/diagram-visibility-control.action.js';
+import { DiagramVisibilityControlActionResponse, SendVisibleElementsActionResponse } from '../common/diagram-visibility-control.action.js';
 import { ExportStoreActionResponse, ImportStoreActionResponse } from '../common/export-import-state.action.js';
 
 export const DiagramVisibilityControlModule = new FeatureModule(bind => {
     bind(ExtensionActionKind).toConstantValue(DiagramVisibilityControlActionResponse.KIND);
     bind(ExtensionActionKind).toConstantValue(ExportStoreActionResponse.KIND);
     bind(ExtensionActionKind).toConstantValue(ImportStoreActionResponse.KIND);
+    bind(ExtensionActionKind).toConstantValue(SendVisibleElementsActionResponse.KIND);
 });

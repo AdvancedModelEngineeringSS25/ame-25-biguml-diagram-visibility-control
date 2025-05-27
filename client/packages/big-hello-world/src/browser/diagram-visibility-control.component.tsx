@@ -12,7 +12,8 @@ import {
     ExportStoreActionResponse,
     ImportStoreActionResponse,
     RequestExportStoreAction,
-    RequestImportStoreAction
+    RequestImportStoreAction,
+    RequestSendVisibleElementsAction
 } from '../common/index.js';
 
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
@@ -68,6 +69,25 @@ export function DiagramVisibilityControl() {
     const visibilityService = useRef<IVisibilityService>(new VisibilityService());
 
     useLayerStore();
+    // Send visible elements to VS Code when they change
+    const sendVisibleElementsToVSCode = useCallback(
+        (elementIds: string[]) => {
+            console.log('Sending visible elements to VS Code:', elementIds);
+            dispatchAction(
+                RequestSendVisibleElementsAction.create({
+                    visibleElementIds: elementIds
+                })
+            );
+        },
+        [dispatchAction]
+    );
+
+    // Effect to send visible elements when they change
+    useEffect(() => {
+        if (visibleElementIds.length > 0) {
+            sendVisibleElementsToVSCode(visibleElementIds);
+        }
+    }, [visibleElementIds, sendVisibleElementsToVSCode]);
 
     /******************
     Main View Functions

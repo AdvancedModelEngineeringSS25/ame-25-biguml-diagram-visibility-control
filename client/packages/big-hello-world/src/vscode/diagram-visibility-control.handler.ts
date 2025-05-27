@@ -21,7 +21,9 @@ import { inject, injectable, postConstruct } from 'inversify';
 import * as vscode from 'vscode';
 import {
     DiagramVisibilityControlActionResponse,
-    RequestDiagramVisibilityControlAction
+    RequestDiagramVisibilityControlAction,
+    RequestSendVisibleElementsAction,
+    SendVisibleElementsActionResponse
 } from '../common/diagram-visibility-control.action.js';
 import {
     ExportStoreActionResponse,
@@ -132,6 +134,34 @@ export class DiagramVisibilityControlActionHandler implements Disposable {
 
                 return ImportStoreActionResponse.create({ data: {} });
             })
+        );
+
+        // Handle the new visible elements action
+        this.toDispose.push(
+            this.actionListener.handleVSCodeRequest<RequestSendVisibleElementsAction>(
+                RequestSendVisibleElementsAction.KIND,
+                async message => {
+                    console.log('FOR HAYDER :-D');
+                    console.log('Received visible elements from React:', message.action.visibleElementIds);
+
+                    // Print the visible element IDs to VS Code console
+                    console.log('=== VISIBLE ELEMENTS ===');
+                    message.action.visibleElementIds.forEach((id, index) => {
+                        console.log(`${index + 1}. ${id}`);
+                    });
+                    console.log(`Total visible elements: ${message.action.visibleElementIds.length}`);
+                    console.log('========================');
+
+                    // You can also show them in VS Code's information message if needed
+                    if (message.action.visibleElementIds.length > 0) {
+                        vscode.window.showInformationMessage(
+                            `Visible Elements Updated: ${message.action.visibleElementIds.length} elements visible`
+                        );
+                    }
+
+                    return SendVisibleElementsActionResponse.create({ success: true });
+                }
+            )
         );
     }
 

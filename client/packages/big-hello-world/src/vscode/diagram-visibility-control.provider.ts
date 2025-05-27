@@ -10,7 +10,8 @@ import { BIGReactWebview } from '@borkdominik-biguml/big-vscode-integration/vsco
 import { inject, injectable, postConstruct } from 'inversify';
 import {
     DiagramVisibilityControlActionResponse,
-    RequestDiagramVisibilityControlAction
+    RequestDiagramVisibilityControlAction,
+    SendVisibleElementsActionResponse
 } from '../common/diagram-visibility-control.action.js';
 import { ExportStoreActionResponse, ImportStoreActionResponse } from '../common/index.js';
 
@@ -27,11 +28,11 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
     protected readonly actionCache = this.actionListener.createCache([
         DiagramVisibilityControlActionResponse.KIND,
         ExportStoreActionResponse.KIND,
-        ImportStoreActionResponse.KIND
+        ImportStoreActionResponse.KIND,
+        SendVisibleElementsActionResponse.KIND
     ]);
 
     protected selectedIds?: string[];
-
 
     @postConstruct()
     protected override init(): void {
@@ -63,6 +64,7 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
                 this.webviewConnector.dispatch(DiagramVisibilityControlActionResponse.create());
                 this.webviewConnector.dispatch(ExportStoreActionResponse.create());
                 this.webviewConnector.dispatch(ImportStoreActionResponse.create());
+                this.webviewConnector.dispatch(SendVisibleElementsActionResponse.create());
             }),
             this.selectionService.onDidSelectionChange(() => {
                 this.selectedIds = this.selectionService.selection?.selectedElementsIDs;
@@ -73,6 +75,7 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
                 this.webviewConnector.dispatch(DiagramVisibilityControlActionResponse.create());
                 this.webviewConnector.dispatch(ExportStoreActionResponse.create());
                 this.webviewConnector.dispatch(ImportStoreActionResponse.create());
+                this.webviewConnector.dispatch(SendVisibleElementsActionResponse.create());
             }),
             this.modelState.onDidChangeModelState(() => {
                 this.requestCount();

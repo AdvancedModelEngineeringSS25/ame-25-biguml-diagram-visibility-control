@@ -63,3 +63,50 @@ export namespace DiagramVisibilityControlActionResponse {
         };
     }
 }
+
+// === SEND VISIBLE ELEMENTS ACTION ===
+
+export interface RequestSendVisibleElementsAction extends RequestAction<SendVisibleElementsActionResponse> {
+    kind: typeof RequestSendVisibleElementsAction.KIND;
+    visibleElementIds: string[];
+}
+
+export namespace RequestSendVisibleElementsAction {
+    export const KIND = 'requestSendVisibleElements';
+
+    export function is(object: unknown): object is RequestSendVisibleElementsAction {
+        return RequestAction.hasKind(object, KIND);
+    }
+
+    export function create(options: Omit<RequestSendVisibleElementsAction, 'kind' | 'requestId'>): RequestSendVisibleElementsAction {
+        return {
+            kind: KIND,
+            requestId: '',
+            ...options
+        };
+    }
+}
+
+export interface SendVisibleElementsActionResponse extends ResponseAction {
+    kind: typeof SendVisibleElementsActionResponse.KIND;
+    success: boolean;
+}
+
+export namespace SendVisibleElementsActionResponse {
+    export const KIND = 'sendVisibleElementsResponse';
+
+    export function is(object: unknown): object is SendVisibleElementsActionResponse {
+        return Action.hasKind(object, KIND);
+    }
+
+    export function create(
+        options?: Omit<SendVisibleElementsActionResponse, 'kind' | 'responseId'> & { responseId?: string }
+    ): SendVisibleElementsActionResponse {
+        return {
+            kind: KIND,
+            responseId: '',
+            success: false,
+            ...options
+        };
+    }
+}
