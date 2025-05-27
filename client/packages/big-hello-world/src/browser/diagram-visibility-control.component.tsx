@@ -17,7 +17,7 @@ import {
 
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { DiagramVisibilityControlActionResponse } from '../common/index.js';
-import type { Element, ElementIdsPerLayer, Filter } from '../model/model.js';
+import type { Element, ElementIdsPerLayer, Filter, Type } from '../model/model.js';
 import type { IVisibilityService } from '../service/IVisibilityService.js';
 import { VisibilityService } from '../service/visibilityService.js';
 import { useLayerStore } from '../store/layerStore.js';
@@ -227,7 +227,7 @@ export function DiagramVisibilityControl() {
 
         const updatedFilter: Filter = {
             ...filter,
-            types: Array.from(typesSet) as any
+            types: Array.from(typesSet) as Type[]
         };
 
         storeUpdateFilter(layerId, filterId, updatedFilter);

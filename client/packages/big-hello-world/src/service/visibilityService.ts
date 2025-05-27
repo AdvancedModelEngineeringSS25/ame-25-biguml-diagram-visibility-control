@@ -83,7 +83,7 @@ export class VisibilityService implements IVisibilityService {
 
     computeAffectedElementIdsForPatternFilter(elements: Element[], filter: PatternFilter): ElementId[] {
         const affectedElementIds = new Set<ElementId>();
-        const matcher = this.match(filter.pattern);
+        const matcher = this.matchPattern(filter.pattern);
 
         for (const element of elements) {
             if (element.name && matcher(element.name)) {
@@ -94,7 +94,7 @@ export class VisibilityService implements IVisibilityService {
         return [...affectedElementIds];
     }
 
-    match(input: string): (text: string) => boolean {
+    private matchPattern(input: string): (text: string) => boolean {
         if (input.startsWith('/') && input.lastIndexOf('/') > 0) {
             // Try to parse the regex
             const lastSlash = input.lastIndexOf('/');
@@ -104,7 +104,7 @@ export class VisibilityService implements IVisibilityService {
             try {
                 const regex = new RegExp(pattern, flags);
                 return (text: string) => regex.test(text);
-            } catch (e) {
+            } catch (e: any) {
                 console.error('Invalid regex:', e.message);
                 return () => false;
             }
