@@ -38,9 +38,7 @@ export function MainView({
                     .sort((a, b) => a.zIndex - b.zIndex)
                     .map(layer => (
                         <div key={layer.id} id='layer' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
-                            <span style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
-                                {layer.name} {layer.zIndex}
-                            </span>
+                            <span style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>{layer.name}</span>
                             <div
                                 id='layer-buttons'
                                 style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center', marginLeft: 'auto' }}
