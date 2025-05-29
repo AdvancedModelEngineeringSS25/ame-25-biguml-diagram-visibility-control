@@ -159,6 +159,16 @@ export class DiagramVisibilityControlActionHandler implements Disposable {
                         );
                     }
 
+                    const visibleElementIds = message.action.visibleElementIds;
+                    // Demonstration that the parent of _u0BjIDyYEfCfmP9ZVqTduw (operation() within a class) makes the class visible
+                    // while the class was not provided in the visibleElementIds.
+                    // const visibleElementIds = [...message.action.visibleElementIds, '_u0BjIDyYEfCfmP9ZVqTduw'];
+
+                    this.actionDispatcher.dispatch({
+                        kind: 'setVisibleElements',
+                        visibleElementIds
+                    } as any);
+
                     return SendVisibleElementsActionResponse.create({ success: true });
                 }
             )

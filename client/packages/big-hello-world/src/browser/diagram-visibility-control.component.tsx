@@ -16,6 +16,7 @@ import {
     RequestSendVisibleElementsAction
 } from '../common/index.js';
 
+import { isEqual } from 'lodash';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { DiagramVisibilityControlActionResponse } from '../common/index.js';
 import type { Element, ElementIdsPerLayer, Filter, Type } from '../model/model.js';
@@ -84,10 +85,9 @@ export function DiagramVisibilityControl() {
 
     // Effect to send visible elements when they change
     useEffect(() => {
-        if (visibleElementIds.length > 0) {
-            sendVisibleElementsToVSCode(visibleElementIds);
-        }
-    }, [visibleElementIds, sendVisibleElementsToVSCode]);
+        if (!modelLoaded) return;
+        sendVisibleElementsToVSCode(visibleElementIds);
+    }, [visibleElementIds, sendVisibleElementsToVSCode, modelLoaded]);
 
     /******************
     Main View Functions
@@ -134,8 +134,10 @@ export function DiagramVisibilityControl() {
         const visbleElementIds = visibilityService.current.computeVisibleElementIds(elementIdsPerLayer, layers);
         console.log('visbleElementIds', visbleElementIds);
 
-        setVisibleElementIds(visbleElementIds);
-    }, [elementIdsPerLayer, layers]);
+        if (!isEqual(visibleElementIds, visbleElementIds)) {
+            setVisibleElementIds(visbleElementIds);
+        }
+    }, [elementIdsPerLayer, visibleElementIds, layers]);
 
     const recomputeAll = useCallback(() => {
         console.log('recomputeAll clicked');

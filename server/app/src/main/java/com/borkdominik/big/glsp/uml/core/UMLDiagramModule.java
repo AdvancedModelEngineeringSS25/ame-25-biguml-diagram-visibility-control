@@ -10,11 +10,15 @@
  ********************************************************************************/
 package com.borkdominik.big.glsp.uml.core;
 
+import org.eclipse.glsp.server.actions.ActionHandler;
+import org.eclipse.glsp.server.di.MultiBinding;
 import org.eclipse.glsp.server.features.core.model.GModelFactory;
 
 import com.borkdominik.big.glsp.server.core.BGEMFDiagramModule;
 import com.borkdominik.big.glsp.server.core.model.BGModelRepresentation;
 import com.borkdominik.big.glsp.server.core.model.integrations.BGEMFSourceModelStorage;
+import com.borkdominik.big.glsp.uml.core.features.visibility.SetVisibleElementsHandler;
+import com.borkdominik.big.glsp.uml.core.features.visibility.VisibleElementsService;
 import com.borkdominik.big.glsp.uml.core.gmodel.UMLGModelFactory;
 import com.borkdominik.big.glsp.uml.core.model.UMLModelMigrator;
 import com.borkdominik.big.glsp.uml.core.model.UMLModelRepresentation;
@@ -28,6 +32,7 @@ public class UMLDiagramModule extends BGEMFDiagramModule {
       super.configureAdditionals();
 
       bind(UMLModelMigrator.class).in(Singleton.class);
+      bind(VisibleElementsService.class).in(Singleton.class);
    }
 
    @Override
@@ -43,6 +48,12 @@ public class UMLDiagramModule extends BGEMFDiagramModule {
    @Override
    protected Class<? extends BGEMFSourceModelStorage> bindSourceModelStorage() {
       return UMLSourceModelStorage.class;
+   }
+
+   @Override
+   protected void configureActionHandlers(MultiBinding<ActionHandler> bindings) {
+      super.configureActionHandlers(bindings);
+      bindings.add(SetVisibleElementsHandler.class);
    }
 
    @Override

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ASCII"?>
+<uml:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_iuMPMDyXEfCaJ_JIMnt8WQ">
+  <packagedElement xsi:type="uml:Package" xmi:id="_sPl3gDyYEfCfmP9ZVqTduw" name="Package">
+    <packagedElement xsi:type="uml:Class" xmi:id="_uA42ADyYEfCfmP9ZVqTduw" name="Class"/>
+  </packagedElement>
+  <packagedElement xsi:type="uml:Class" xmi:id="_y0XBgTyXEfCfmP9ZVqTduw" name="Class">
+    <ownedAttribute xmi:id="_d4njMDyeEfCd97VebB8x-A" name="Property">
+      <lowerValue xsi:type="uml:LiteralInteger" xmi:id="_d4pYYDyeEfCd97VebB8x-A" value="1"/>
+      <upperValue xsi:type="uml:LiteralUnlimitedNatural" xmi:id="_d4p_cDyeEfCd97VebB8x-A" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_gtgssDyeEfCd97VebB8x-A" name="Property">
+      <lowerValue xsi:type="uml:LiteralInteger" xmi:id="_gtgssTyeEfCd97VebB8x-A" value="1"/>
+      <upperValue xsi:type="uml:LiteralUnlimitedNatural" xmi:id="_gtgssjyeEfCd97VebB8x-A" value="1"/>
+    </ownedAttribute>
+    <ownedOperation xmi:id="_u0BjIDyYEfCfmP9ZVqTduw" name="Operation"/>
+  </packagedElement>
+  <packagedElement xsi:type="uml:Interface" xmi:id="_l8HuUDyYEfCfmP9ZVqTduw" name="Interface"/>
+</uml:Model>
