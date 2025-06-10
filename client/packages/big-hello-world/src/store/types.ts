@@ -25,7 +25,7 @@ export type PatternFilter = FilterBase & {
 
 export type SelectionFilter = FilterBase & {
     type: 'selection';
-    elements: string[];
+    elements: { id: string; name: string }[]; // Change this
 };
 
 export type Filter = TypeFilter | SelectionFilter | PatternFilter;

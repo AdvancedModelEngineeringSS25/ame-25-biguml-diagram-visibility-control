@@ -59,8 +59,15 @@ export function DiagramVisibilityControl() {
                 console.log('Save in store');
                 const storeData = action.data;
                 console.log('storeData', storeData);
-                useLayerStore.setState(JSON.parse(typeof storeData === 'string' ? storeData : JSON.stringify(storeData)));
-                console.log('Store updated', useLayerStore.getState());
+
+                // Additional safety check - ensure we're not setting empty data
+                if (storeData && Object.keys(storeData).length > 0) {
+                    // The data is already validated at this point, so we can safely set it
+                    useLayerStore.setState(storeData);
+                    console.log('Store updated', useLayerStore.getState());
+                } else {
+                    console.log('No valid data to import, keeping current state');
+                }
             }
         });
     }, [listenAction]);

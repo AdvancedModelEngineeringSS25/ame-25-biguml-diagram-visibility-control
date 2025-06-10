@@ -64,6 +64,7 @@
     "@eclipse-glsp/protocol": "*",
     "@eclipse-glsp/vscode-integration-webview": "*",
     "vscode-messenger-common": "^0.4.5",
+    "zod": "^3.25.57",
     "zustand": "^5.0.3"
   },
   "devDependencies": {

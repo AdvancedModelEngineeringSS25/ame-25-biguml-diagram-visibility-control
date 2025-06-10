@@ -32,6 +32,7 @@ import {
     RequestImportStoreAction
 } from '../common/export-import-state.action.js';
 import type { Element, Type } from '../model/model.js';
+import { validateLayerState } from '../store/validation.js';
 
 // Handle the action within the server and not the glsp client / server
 @injectable()
@@ -93,7 +94,7 @@ export class DiagramVisibilityControlActionHandler implements Disposable {
                         } else {
                             throw new Error('Export data is not a string');
                         }
-
+                        vscode.window.showInformationMessage('Configuration exported successfully!');
                         return ExportStoreActionResponse.create({ success: true });
                     } catch (error) {
                         console.error('Failed to write file:', error);
@@ -120,18 +121,31 @@ export class DiagramVisibilityControlActionHandler implements Disposable {
                         const text = Buffer.from(content).toString('utf8');
                         const parsed = JSON.parse(text);
 
-                        // Optional: validate parsed structure here
+                        // Validate the parsed data
+                        const validation = validateLayerState(parsed);
+                        if (!validation.success) {
+                            vscode.window.showErrorMessage(`Import failed: ${validation.error}`);
+                            return ImportStoreActionResponse.create({ data: {} });
+                        }
 
+                        vscode.window.showInformationMessage('Configuration imported successfully!');
                         return ImportStoreActionResponse.create({
-                            data: parsed
+                            data: validation.data
                         });
-                        //Handle error managment
                     } catch (error) {
                         console.error('Failed to import configuration:', error);
+                        let errorMessage = 'Failed to import configuration';
+
+                        if (error instanceof SyntaxError) {
+                            errorMessage = 'Invalid JSON file format';
+                        } else if (error instanceof Error) {
+                            errorMessage = `Import error: ${error.message}`;
+                        }
+
+                        vscode.window.showErrorMessage(errorMessage);
                         return ImportStoreActionResponse.create({ data: {} });
                     }
                 }
-
                 return ImportStoreActionResponse.create({ data: {} });
             })
         );
