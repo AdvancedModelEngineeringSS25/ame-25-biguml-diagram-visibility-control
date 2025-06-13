@@ -165,7 +165,7 @@ export class VisibilityService implements IVisibilityService {
     computeVisibleElementIds({ default: remainingElements, ...elementIds }: ElementIdsPerLayer, layers: Layer[]): ElementId[] {
         const visibleElementIds = new Set<ElementId>(remainingElements);
 
-        for (const layer of layers.sort((a, b) => b.zIndex - a.zIndex)) {
+        for (const layer of layers) {
             const layerElementIds = elementIds[layer.id];
             if (!layerElementIds || !layer.visible) continue;
 
