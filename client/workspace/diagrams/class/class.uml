@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="ASCII"?>
 <uml:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_ePgIIO0zEe6ONuorAhNLBg">
-  <packagedElement xsi:type="uml:Package" xmi:id="_F6WpsTySEfCDSsh077msNg" name="Package">
-    <packagedElement xsi:type="uml:Class" xmi:id="_GiXr8DySEfCDSsh077msNg" name="Class"/>
-  </packagedElement>
   <packagedElement xsi:type="uml:Class" xmi:id="_e2z_wO0zEe6ONuorAhNLBg" name="LectureController">
     <ownedAttribute xmi:id="_sz4U4PgmEe6ut-tKD2_jgQ" name="lectureService" visibility="protected" type="_l84A0PgmEe6ut-tKD2_jgQ">
       <lowerValue xsi:type="uml:LiteralInteger" xmi:id="_sz4U4fgmEe6ut-tKD2_jgQ" value="1"/>
