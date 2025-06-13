@@ -15,7 +15,7 @@ export class VisibilityService implements IVisibilityService {
         const elementIdsPerLayer: ElementIdsPerLayer = {};
         const seenIds: ElementId[] = [];
 
-        const sortedLayers = layers.sort((a, b) => b.zIndex - a.zIndex);
+        const sortedLayers = layers.sort((a, b) => a.zIndex - b.zIndex);
 
         console.log('sortedLayers', sortedLayers);
 
@@ -31,9 +31,24 @@ export class VisibilityService implements IVisibilityService {
             elementIdsPerLayer[layer.id] = affectedElementIds;
         }
 
-        elementIdsPerLayer['default'] = elements.map(element => element.id).filter(id => !seenIds.includes(id));
+        elementIdsPerLayer['default'] = this.extractAllElementIds(elements).filter(id => !seenIds.includes(id));
+
+        console.log('elementIdsPerLayer', elementIdsPerLayer);
 
         return elementIdsPerLayer;
+    }
+
+    extractAllElementIds(elements: Element[]): ElementId[] {
+        const elementIds: ElementId[] = [];
+
+        for (const element of elements) {
+            elementIds.push(element.id);
+            if (element.children) {
+                elementIds.push(...this.extractAllElementIds(element.children));
+            }
+        }
+
+        return [...new Set(elementIds)];
     }
 
     computeAffectedElementIdsForLayer(elements: Element[], layer: Layer): ElementId[] {
@@ -75,6 +90,10 @@ export class VisibilityService implements IVisibilityService {
         for (const element of elements) {
             if (types.includes(element.type)) {
                 affectedElementIds.add(element.id);
+
+                if (element.children) {
+                    this.extractAllElementIds(element.children).forEach(childId => affectedElementIds.add(childId));
+                }
             }
         }
 
@@ -88,6 +107,10 @@ export class VisibilityService implements IVisibilityService {
         for (const element of elements) {
             if (element.name && matcher(element.name)) {
                 affectedElementIds.add(element.id);
+
+                if (element.children) {
+                    this.extractAllElementIds(element.children).forEach(childId => affectedElementIds.add(childId));
+                }
             }
         }
 
@@ -121,6 +144,18 @@ export class VisibilityService implements IVisibilityService {
         for (const element of elements) {
             if (selectedElementIds.some(item => item.id === element.id)) {
                 affectedElementIds.add(element.id);
+
+                if (element.children) {
+                    const childIds = this.extractAllElementIds(element.children);
+                    console.log({ childIds });
+
+                    childIds.forEach(childId => affectedElementIds.add(childId));
+                }
+            } else if (element.children) {
+                const affectedChildren = this.computeAffectedElementIdsForSelectionFilter(element.children, filter);
+                console.log({ affectedChildren });
+
+                affectedChildren.forEach(childId => affectedElementIds.add(childId));
             }
         }
 
@@ -130,9 +165,9 @@ export class VisibilityService implements IVisibilityService {
     computeVisibleElementIds({ default: remainingElements, ...elementIds }: ElementIdsPerLayer, layers: Layer[]): ElementId[] {
         const visibleElementIds = new Set<ElementId>(remainingElements);
 
-        for (const layer of layers) {
+        for (const layer of layers.sort((a, b) => b.zIndex - a.zIndex)) {
             const layerElementIds = elementIds[layer.id];
-            if (!layer.visible || !layerElementIds) continue;
+            if (!layerElementIds || !layer.visible) continue;
 
             for (const id of layerElementIds) {
                 visibleElementIds.add(id);
