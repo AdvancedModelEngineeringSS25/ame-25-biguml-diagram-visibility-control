@@ -11,6 +11,7 @@ import type { Element, ElementId, ElementIdsPerLayer, Filter, Layer, PatternFilt
 import { type IVisibilityService } from './IVisibilityService.js';
 
 export class VisibilityService implements IVisibilityService {
+    
     computeAffectedElementIdsPerLayer(elements: Element[], layers: Layer[]): ElementIdsPerLayer {
         const elementIdsPerLayer: ElementIdsPerLayer = {};
         const seenIds: ElementId[] = [];

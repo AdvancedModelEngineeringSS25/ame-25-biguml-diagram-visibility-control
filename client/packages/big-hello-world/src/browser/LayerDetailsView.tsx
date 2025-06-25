@@ -6,7 +6,7 @@
  *
  * SPDX-License-Identifier: MIT
  **********************************************************************************/
-import { VSCodeButton, VSCodeDivider, VSCodeTextField } from '@vscode/webview-ui-toolkit/react/index.js';
+import { VSCodeButton, VSCodeCheckbox, VSCodeDivider, VSCodeTextField } from '@vscode/webview-ui-toolkit/react/index.js';
 import { useEffect, useRef, useState } from 'react';
 import type { Layer } from '../model/model.js';
 
@@ -14,6 +14,7 @@ export function LayerDetailsView({
     layer,
     onBack,
     changeLayerName,
+    changeLayerVisibilityMode,
     deleteFilter,
     deleteLayer,
     addFilter,
@@ -22,6 +23,7 @@ export function LayerDetailsView({
     layer: Layer;
     onBack: () => void;
     changeLayerName: (id: string, name: string) => void;
+    changeLayerVisibilityMode: (layerId: string, explicitlyShows: boolean) => void;
     deleteFilter: (layerId: string, filderId: string) => void;
     deleteLayer: (id: string) => void;
     addFilter: (layerId: string, newLayerType: 'type' | 'pattern' | 'selection') => void;
@@ -72,37 +74,50 @@ export function LayerDetailsView({
                 value={layer.name}
             />
 
-            <h3>Filters</h3>
-            {layer.filters.map(filter => (
-                <div
-                    key={filter.id}
-                    className="className='reference-item-body"
-                    style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}
+            <div style={{ marginTop: '8px', marginBottom: '12px' }}>
+                <VSCodeCheckbox
+                    checked={layer.explicitlyShows ?? false}
+                    onChange={e => {
+                        changeLayerVisibilityMode(layer.id, (e.target as HTMLInputElement).checked);
+                    }}
                 >
-                    <div style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
-                        <span>{filter.name}</span>
-                        <span>-</span>
-                        <span>{filter.type}</span>
-                    </div>
+                    Explicitly show elements
+                </VSCodeCheckbox>
+            </div>
+
+            <h3>Filters</h3>
+            {
+                layer.filters.map(filter => (
                     <div
-                        id='filter-buttons'
-                        className='reference-item-actions'
-                        style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center', marginLeft: 'auto' }}
+                        key={filter.id}
+                        className="className='reference-item-body"
+                        style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}
                     >
-                        <VSCodeButton
-                            slot='anchor'
-                            className='action-delete'
-                            appearance='icon'
-                            onClick={() => deleteFilter(layer.id, filter.id)}
+                        <div style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
+                            <span>{filter.name}</span>
+                            <span>-</span>
+                            <span>{filter.type}</span>
+                        </div>
+                        <div
+                            id='filter-buttons'
+                            className='reference-item-actions'
+                            style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center', marginLeft: 'auto' }}
                         >
-                            <div className='codicon codicon-trash'></div>
-                        </VSCodeButton>
-                        <VSCodeButton slot='anchor' appearance='icon' onClick={() => onFilterSelect(filter.id)}>
-                            <div className='codicon codicon-chevron-right'></div>
-                        </VSCodeButton>
+                            <VSCodeButton
+                                slot='anchor'
+                                className='action-delete'
+                                appearance='icon'
+                                onClick={() => deleteFilter(layer.id, filter.id)}
+                            >
+                                <div className='codicon codicon-trash'></div>
+                            </VSCodeButton>
+                            <VSCodeButton slot='anchor' appearance='icon' onClick={() => onFilterSelect(filter.id)}>
+                                <div className='codicon codicon-chevron-right'></div>
+                            </VSCodeButton>
+                        </div>
                     </div>
-                </div>
-            ))}
+                ))
+            }
             <br />
             <VSCodeDivider />
             <footer style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
@@ -139,6 +154,6 @@ export function LayerDetailsView({
 
                 </div>
             </footer>
-        </div>
+        </div >
     );
 }

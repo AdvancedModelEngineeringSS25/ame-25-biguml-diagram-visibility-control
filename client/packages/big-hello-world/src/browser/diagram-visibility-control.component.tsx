@@ -183,6 +183,11 @@ export function DiagramVisibilityControl() {
         setSelectedFilterId(null);
     };
 
+    const changeLayerVisibilityMode = (id: string, explicitlyShows: boolean) => {
+        console.log('changeLayerVisibilityMode clicked', id, explicitlyShows);
+        storeUpdateLayer(id, { explicitlyShows });
+    };
+
     const deleteLayer = (id: string) => {
         console.log('deleteLayer clicked', id);
         storeDeleteLayer(id);
@@ -272,8 +277,8 @@ export function DiagramVisibilityControl() {
     };
 
     /*******
-        Listener
-        *******/
+    Listener
+    *******/
 
     useEffect(() => {
         listenAction(action => {
@@ -290,8 +295,8 @@ export function DiagramVisibilityControl() {
     }, [listenAction, setModelLoaded, modelLoaded]);
 
     /*********
-        Navigation
-        *********/
+    Navigation
+    *********/
 
     if (selectedLayer && !selectedFilter) {
         return (
@@ -299,6 +304,7 @@ export function DiagramVisibilityControl() {
                 layer={selectedLayer}
                 changeLayerName={changeLayerName}
                 onBack={goBackToLayers}
+                changeLayerVisibilityMode={changeLayerVisibilityMode}
                 deleteFilter={deleteFilter}
                 deleteLayer={deleteLayer}
                 addFilter={addFilter}

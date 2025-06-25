@@ -50,6 +50,7 @@ export const useLayerStore = create<LayerState>()(
                     name,
                     zIndex,
                     visible: true,
+                    explicitlyShows: false,
                     filters: []
                 };
                 set(state => ({
