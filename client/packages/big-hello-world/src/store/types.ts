@@ -35,7 +35,6 @@ export interface Layer {
     name: string;
     visible: boolean;
     zIndex: number;
-    explicitlyShows: boolean
     filters: Filter[];
 
     /* future-proof */

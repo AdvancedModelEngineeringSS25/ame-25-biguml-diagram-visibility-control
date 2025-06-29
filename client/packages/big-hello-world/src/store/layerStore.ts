@@ -19,8 +19,8 @@ export interface LayerState {
     deleteLayer: (id: string) => void;
     reorderLayers: (from: number, to: number) => void;
     toggleLayer: (id: string) => void;
-  
-    addFilter: (layerId: string, newLayerType: 'type' | 'selection' | 'pattern', ) => Filter;
+
+    addFilter: (layerId: string, newLayerType: 'type' | 'selection' | 'pattern') => Filter;
 
     updateFilter: (layerId: string, filterId: string, f: Filter) => void;
     deleteFilter: (layerId: string, filterId: string) => void;
@@ -49,8 +49,8 @@ export const useLayerStore = create<LayerState>()(
                     id,
                     name,
                     zIndex,
-                    visible: true,
-                    explicitlyShows: false,
+                    active: true,
+                    type: 'hide',
                     filters: []
                 };
                 set(state => ({
@@ -82,7 +82,7 @@ export const useLayerStore = create<LayerState>()(
 
             toggleLayer: id => {
                 set(state => ({
-                    layers: state.layers.map(l => (l.id === id ? { ...l, visible: !l.visible } : l))
+                    layers: state.layers.map(l => (l.id === id ? { ...l, active: !l.active } : l))
                 }));
             },
 
@@ -125,12 +125,12 @@ export const useLayerStore = create<LayerState>()(
                 set(state => ({
                     layers: state.layers.map(layer => {
                         if (layer.id !== layerId) return layer;
-                    
+
                         return {
                             ...layer,
                             filters: layer.filters.map(filter => {
                                 if (filter.id !== filterId || filter.type !== 'selection') return filter;
-                            
+
                                 const selectionFilter = filter as SelectionFilter;
                                 const existingIds = new Set(selectionFilter.elements.map(e => e.id));
                                 const newElements = elements.filter(e => !existingIds.has(e.id));
@@ -145,17 +145,16 @@ export const useLayerStore = create<LayerState>()(
                 }));
             },
 
-
             deleteSelectedElement: (layerId, filterId, elementId) => {
                 set(state => ({
                     layers: state.layers.map(layer => {
                         if (layer.id !== layerId) return layer;
-                    
+
                         return {
                             ...layer,
                             filters: layer.filters.map(filter => {
                                 if (filter.id !== filterId || filter.type !== 'selection') return filter;
-                            
+
                                 const selectionFilter = filter as SelectionFilter;
                                 return {
                                     ...selectionFilter,

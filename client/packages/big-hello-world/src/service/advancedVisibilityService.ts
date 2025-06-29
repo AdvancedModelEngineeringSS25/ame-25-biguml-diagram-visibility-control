@@ -23,7 +23,7 @@ import { type IVisibilityService } from './IVisibilityService.js';
 import { VisibilityService } from './visibilityService.js';
 
 export class AdvancedVisibilityService extends VisibilityService implements IVisibilityService {
-    computeAffectedElementIdsPerLayer(elements: Element[], layers: Layer[]): ElementIdsPerLayer {
+    override computeAffectedElementIdsPerLayer(elements: Element[], layers: Layer[]): ElementIdsPerLayer {
         const elementIdsPerLayer: ElementIdsPerLayer = {};
 
         for (const layer of layers) {
@@ -31,14 +31,16 @@ export class AdvancedVisibilityService extends VisibilityService implements IVis
             elementIdsPerLayer[layer.id] = layerElementIds;
         }
 
-        elementIdsPerLayer['default'] = this.extractAllElementIds(elements);
+        elementIdsPerLayer['default'] = this.extractAllElementIds(elements) ?? [];
 
         console.log('elementIdsPerLayer', elementIdsPerLayer);
 
         return elementIdsPerLayer;
     }
 
-    computeVisibleElementIds({ default: allElements, ...elementIds }: ElementIdsPerLayer, layers: Layer[]): ElementId[] {
+    override computeVisibleElementIds({ default: allElements, ...elementIds }: ElementIdsPerLayer, layers: Layer[]): ElementId[] {
+        if (!allElements) return [];
+
         const visibleElementIds: ElementId[] = [];
         const hiddenElementIds: ElementId[] = [];
 
@@ -55,16 +57,20 @@ export class AdvancedVisibilityService extends VisibilityService implements IVis
 
             const affectedElementIds = elementIds[layer.id] || [];
 
+            console.log(layer.name, layer.type, layer.active, { affectedElementIds });
+
             for (const elementId of affectedElementIds) {
                 if (isElementHandled(elementId)) continue;
 
                 if (layer.type === 'show') {
                     visibleElementIds.push(elementId);
-                } else {
+                } else if (layer.type === 'hide') {
                     hiddenElementIds.push(elementId);
                 }
             }
         }
+
+        console.log({ allElements, visibleElementIds, hiddenElementIds });
 
         // Add remaining elements that are not affected by any layer
         visibleElementIds.push(...allElements.filter(id => !isElementHandled(id)));

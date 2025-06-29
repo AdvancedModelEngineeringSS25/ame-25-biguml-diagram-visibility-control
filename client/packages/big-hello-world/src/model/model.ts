@@ -46,7 +46,6 @@ export interface Layer {
     name: string;
     active: boolean;
     zIndex: number;
-    explicitlyShows?: boolean;
     filters: Filter[];
     type: 'hide' | 'show';
 

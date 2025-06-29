@@ -14,9 +14,9 @@ const sampleLayers: Layer[] = [
     {
         id: '1',
         name: 'Layer 1',
-        visible: true,
+        active: true,
+        type: 'hide',
         zIndex: 1,
-        explicitlyShows: false,
         filters: [
             { id: '1', name: 'filter 1', type: 'type', types: ['OwnedAttribute', 'UMLUsage'] },
             { id: '2', name: 'filter 2', type: 'pattern', pattern: 'hello', types: ['OwnedAttribute'] },
@@ -34,9 +34,9 @@ const sampleLayers: Layer[] = [
     {
         id: '2',
         name: 'Layer 2',
-        visible: false,
+        active: false,
+        type: 'show',
         zIndex: 2,
-        explicitlyShows: false,
         filters: [{ id: '4', name: 'filter 4', type: 'type', types: ['Class'] }]
     }
 ];
