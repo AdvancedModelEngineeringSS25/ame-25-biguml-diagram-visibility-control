@@ -225,7 +225,7 @@ describe('VisiblityService', () => {
             visible: true
         };
 
-        it('should only set elementId for the layer with the highest relevant z-index', async () => {
+        it('should only set elementId for the layer with the lowest relevant z-index', async () => {
             const elements: Element[] = [
                 constructElement({ id: '1' }),
                 constructElement({ id: '2' }),
@@ -284,9 +284,9 @@ describe('VisiblityService', () => {
 
             const elementIdsPerLayer = visibilityService.computeAffectedElementIdsPerLayer(elements, layers);
 
-            expect(elementIdsPerLayer['3']).toStrictEqual(['3']);
-            expect(elementIdsPerLayer['2']).toStrictEqual(['1', '2']);
-            expect(elementIdsPerLayer['1']).toStrictEqual([]);
+            expect(elementIdsPerLayer['3']).toStrictEqual([]);
+            expect(elementIdsPerLayer['2']).toStrictEqual(['1', '3']);
+            expect(elementIdsPerLayer['1']).toStrictEqual(['2']);
             expect(elementIdsPerLayer['-1']).toStrictEqual(['4']);
         });
 
