@@ -24,7 +24,7 @@ function constructElement(
     } & Partial<Element>
 ): Element {
     return {
-        type: 'class',
+        type: 'Class',
         children: [],
         ...element
     };
@@ -222,7 +222,7 @@ describe('VisiblityService', () => {
 
         const layerBase: Omit<Layer, 'filters' | 'zIndex' | 'id'> = {
             name: 'layer 1',
-            visible: true
+            active: true
         };
 
         it('should only set elementId for the layer with the lowest relevant z-index', async () => {
@@ -337,12 +337,12 @@ describe('VisiblityService', () => {
                 {
                     ...layerBase,
                     id: '1',
-                    visible: true
+                    active: true
                 },
                 {
                     ...layerBase,
                     id: '2',
-                    visible: false
+                    active: false
                 }
             ];
 
@@ -374,7 +374,7 @@ describe('VisiblityService', () => {
                 {
                     ...layerBase,
                     id: '1',
-                    visible: true
+                    active: true
                 }
             ];
 
@@ -390,7 +390,7 @@ describe('VisiblityService', () => {
                 {
                     ...layerBase,
                     id: '1',
-                    visible: false
+                    active: false
                 }
             ];
 
@@ -407,7 +407,7 @@ describe('VisiblityService', () => {
     describe('computeAffectedElementIdsForLayer', () => {
         const layerBase: Omit<Layer, 'filters'> = {
             id: '1',
-            visible: true,
+            active: true,
             name: 'layer 1',
             zIndex: 1
         };

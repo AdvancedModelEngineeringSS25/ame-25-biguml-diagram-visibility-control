@@ -44,10 +44,11 @@ export type Filter = TypeFilter | SelectionFilter | PatternFilter;
 export interface Layer {
     id: string;
     name: string;
-    visible: boolean;
+    active: boolean;
     zIndex: number;
-    explicitlyShows: boolean
+    explicitlyShows?: boolean;
     filters: Filter[];
+    type: 'hide' | 'show';
 
     /* future-proof */
     groupId?: string;
