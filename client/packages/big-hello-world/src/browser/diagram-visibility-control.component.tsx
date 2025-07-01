@@ -147,7 +147,7 @@ export function DiagramVisibilityControl() {
     }, [elementIdsPerLayer, visibleElementIds, layers]);
 
     const recomputeAll = useCallback(() => {
-        console.log('recomputeAll clicked');
+        console.log('recomputing All');
 
         setElementIdsPerLayer(visibilityService.current.computeAffectedElementIdsPerLayer(model, layers));
         console.log('elementIdsPerLayer', elementIdsPerLayer.current);
@@ -181,6 +181,7 @@ export function DiagramVisibilityControl() {
         console.log('goBackToLayers clicked');
         setSelectedLayerId(null);
         setSelectedFilterId(null);
+        recomputeAll();
     };
 
     const changeLayerType = (id: string, type: Layer['type']) => {
@@ -340,7 +341,6 @@ export function DiagramVisibilityControl() {
                 goToDetails={setSelectedLayerId}
                 uploadConfig={uploadConfig}
                 saveConfig={saveConfig}
-                recomputeAll={recomputeAll}
                 addLayer={addLayer}
             />
             {/* <br />

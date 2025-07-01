@@ -17,7 +17,6 @@ export function MainView({
     goToDetails,
     uploadConfig,
     saveConfig,
-    recomputeAll,
     addLayer
 }: {
     layers: Layer[];
@@ -27,7 +26,6 @@ export function MainView({
     goToDetails: (id: string) => void;
     uploadConfig: () => void;
     saveConfig: () => void;
-    recomputeAll: () => void;
     addLayer: () => void;
 }) {
     return (
@@ -83,9 +81,6 @@ export function MainView({
                     </VSCodeButton>
                     <VSCodeButton slot='anchor' appearance='icon' onClick={saveConfig}>
                         <div className='codicon codicon-cloud-download'></div>
-                    </VSCodeButton>
-                    <VSCodeButton slot='anchor' appearance='icon' onClick={recomputeAll}>
-                        <div className='codicon codicon-refresh'></div>
                     </VSCodeButton>
                 </div>
                 <div id='primary-footer-button' style={{ marginLeft: 'auto' }}>
