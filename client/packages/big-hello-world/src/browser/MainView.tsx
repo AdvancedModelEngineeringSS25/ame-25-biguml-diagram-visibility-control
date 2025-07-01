@@ -17,7 +17,6 @@ export function MainView({
     goToDetails,
     uploadConfig,
     saveConfig,
-    recomputeAll,
     addLayer
 }: {
     layers: Layer[];
@@ -27,7 +26,6 @@ export function MainView({
     goToDetails: (id: string) => void;
     uploadConfig: () => void;
     saveConfig: () => void;
-    recomputeAll: () => void;
     addLayer: () => void;
 }) {
     return (
@@ -38,7 +36,25 @@ export function MainView({
                     .sort((a, b) => a.zIndex - b.zIndex)
                     .map(layer => (
                         <div key={layer.id} id='layer' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
-                            <span style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>{layer.name}</span>
+                            <VSCodeButton slot='anchor' appearance='icon' onClick={() => toggleActive(layer.id)}>
+                                {layer.active ? (
+                                    <div className='codicon codicon-pass-filled'></div>
+                                ) : (
+                                    <div className='codicon codicon-pass'></div>
+                                )}
+                            </VSCodeButton>
+
+                            <span style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
+                                {layer.name}
+
+                                <span className='type-display' style={{ opacity: 0.5, marginInline: 4 }}>
+                                    {layer.type === 'show' ? (
+                                        <div className='codicon codicon-eye'></div>
+                                    ) : (
+                                        <div className='codicon codicon-eye-closed'></div>
+                                    )}
+                                </span>
+                            </span>
                             <div
                                 id='layer-buttons'
                                 style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center', marginLeft: 'auto' }}
@@ -48,13 +64,6 @@ export function MainView({
                                 </VSCodeButton>
                                 <VSCodeButton slot='anchor' appearance='icon' onClick={() => moveDown(layer.id)}>
                                     <div className='codicon codicon-chevron-down'></div>
-                                </VSCodeButton>
-                                <VSCodeButton slot='anchor' appearance='icon' onClick={() => toggleActive(layer.id)}>
-                                    {layer.visible ? (
-                                        <div className='codicon codicon-eye'></div>
-                                    ) : (
-                                        <div className='codicon codicon-eye-closed'></div>
-                                    )}
                                 </VSCodeButton>
                                 <VSCodeButton slot='anchor' appearance='icon' onClick={() => goToDetails(layer.id)}>
                                     <div className='codicon codicon-chevron-right'></div>
@@ -72,9 +81,6 @@ export function MainView({
                     </VSCodeButton>
                     <VSCodeButton slot='anchor' appearance='icon' onClick={saveConfig}>
                         <div className='codicon codicon-cloud-download'></div>
-                    </VSCodeButton>
-                    <VSCodeButton slot='anchor' appearance='icon' onClick={recomputeAll}>
-                        <div className='codicon codicon-refresh'></div>
                     </VSCodeButton>
                 </div>
                 <div id='primary-footer-button' style={{ marginLeft: 'auto' }}>

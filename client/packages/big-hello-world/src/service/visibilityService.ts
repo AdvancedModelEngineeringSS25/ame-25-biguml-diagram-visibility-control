@@ -70,7 +70,7 @@ export class VisibilityService implements IVisibilityService {
         return [...new Set(elementIds)];
     }
 
-    private computeAffectedElementIdsForFilter(elements: Element[], filter: Filter): ElementId[] {
+    computeAffectedElementIdsForFilter(elements: Element[], filter: Filter): ElementId[] {
         switch (filter.type) {
             case 'type':
                 return this.computeAffectedElementIdsForTypeFilter(elements, filter);
@@ -167,7 +167,7 @@ export class VisibilityService implements IVisibilityService {
 
         for (const layer of layers) {
             const layerElementIds = elementIds[layer.id];
-            if (!layerElementIds || !layer.visible) continue;
+            if (!layerElementIds || !layer.active) continue;
 
             for (const id of layerElementIds) {
                 visibleElementIds.add(id);

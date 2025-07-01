@@ -7,14 +7,14 @@
  * SPDX-License-Identifier: MIT
  **********************************************************************************/
 
-import type { Element, ElementId, ElementIdsPerLayer, Layer, PatternFilter, SelectionFilter, TypeFilter } from '../model/model.js';
+import type { Element, ElementId, ElementIdsPerLayer, Filter, Layer, PatternFilter, SelectionFilter, TypeFilter } from '../model/model.js';
 
 export interface IVisibilityService {
     computeAffectedElementIdsPerLayer(elements: Element[], layers: Layer[]): ElementIdsPerLayer;
 
     computeAffectedElementIdsForLayer(elements: Element[], layer: Layer): ElementId[];
 
-    // computeAffectedElementIdsForFilter(elements: Element[], filter: Filter): ElementId[];
+    computeAffectedElementIdsForFilter(elements: Element[], filter: Filter): ElementId[];
 
     computeAffectedElementIdsForTypeFilter(elements: Element[], filter: TypeFilter): ElementId[];
 

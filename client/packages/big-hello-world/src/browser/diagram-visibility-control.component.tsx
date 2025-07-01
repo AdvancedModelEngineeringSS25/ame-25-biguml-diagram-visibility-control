@@ -19,9 +19,9 @@ import {
 import { isEqual } from 'lodash';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { DiagramVisibilityControlActionResponse } from '../common/index.js';
-import type { Element, ElementIdsPerLayer, Filter, Type } from '../model/model.js';
+import type { Element, ElementIdsPerLayer, Filter, Layer, Type } from '../model/model.js';
 import type { IVisibilityService } from '../service/IVisibilityService.js';
-import { VisibilityService } from '../service/visibilityService.js';
+import { AdvancedVisibilityService } from '../service/advancedVisibilityService.js';
 import { useLayerStore } from '../store/layerStore.js';
 import { FilterDetailsView } from './FilterDetailsView.js';
 import { LayerDetailsView } from './LayerDetailsView.js';
@@ -74,7 +74,7 @@ export function DiagramVisibilityControl() {
 
     const [model, setModel] = useState<Element[]>([]);
     const [modelLoaded, setModelLoaded] = useState<boolean>(false);
-    const visibilityService = useRef<IVisibilityService>(new VisibilityService());
+    const visibilityService = useRef<IVisibilityService>(new AdvancedVisibilityService());
 
     useLayerStore();
     // Send visible elements to VS Code when they change
@@ -147,7 +147,7 @@ export function DiagramVisibilityControl() {
     }, [elementIdsPerLayer, visibleElementIds, layers]);
 
     const recomputeAll = useCallback(() => {
-        console.log('recomputeAll clicked');
+        console.log('recomputing All');
 
         setElementIdsPerLayer(visibilityService.current.computeAffectedElementIdsPerLayer(model, layers));
         console.log('elementIdsPerLayer', elementIdsPerLayer.current);
@@ -157,7 +157,7 @@ export function DiagramVisibilityControl() {
 
     useEffect(() => {
         recomputeVisibleElements();
-    }, [elementIdsPerLayer, recomputeVisibleElements]);
+    }, [elementIdsPerLayer, recomputeAll, recomputeVisibleElements]);
 
     useEffect(() => {
         console.log({ modelLoaded });
@@ -181,6 +181,12 @@ export function DiagramVisibilityControl() {
         console.log('goBackToLayers clicked');
         setSelectedLayerId(null);
         setSelectedFilterId(null);
+        recomputeAll();
+    };
+
+    const changeLayerType = (id: string, type: Layer['type']) => {
+        console.log('changeLayerType clicked', id, type);
+        storeUpdateLayer(id, { type });
     };
 
     const deleteLayer = (id: string) => {
@@ -272,8 +278,8 @@ export function DiagramVisibilityControl() {
     };
 
     /*******
-        Listener
-        *******/
+    Listener
+    *******/
 
     useEffect(() => {
         listenAction(action => {
@@ -290,8 +296,8 @@ export function DiagramVisibilityControl() {
     }, [listenAction, setModelLoaded, modelLoaded]);
 
     /*********
-        Navigation
-        *********/
+    Navigation
+    *********/
 
     if (selectedLayer && !selectedFilter) {
         return (
@@ -299,6 +305,7 @@ export function DiagramVisibilityControl() {
                 layer={selectedLayer}
                 changeLayerName={changeLayerName}
                 onBack={goBackToLayers}
+                changeLayerType={changeLayerType}
                 deleteFilter={deleteFilter}
                 deleteLayer={deleteLayer}
                 addFilter={addFilter}
@@ -334,10 +341,9 @@ export function DiagramVisibilityControl() {
                 goToDetails={setSelectedLayerId}
                 uploadConfig={uploadConfig}
                 saveConfig={saveConfig}
-                recomputeAll={recomputeAll}
                 addLayer={addLayer}
             />
-            <br />
+            {/* <br />
             <br />
             <h2>Visible Element IDs</h2>
             {visibleElementIds.map(item => {
@@ -347,7 +353,7 @@ export function DiagramVisibilityControl() {
                         {item}
                     </div>
                 );
-            })}
+            })} */}
         </>
     );
 }

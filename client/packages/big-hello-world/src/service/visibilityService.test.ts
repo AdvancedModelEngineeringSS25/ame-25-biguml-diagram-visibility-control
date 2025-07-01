@@ -24,7 +24,7 @@ function constructElement(
     } & Partial<Element>
 ): Element {
     return {
-        type: 'class',
+        type: 'Class',
         children: [],
         ...element
     };
@@ -222,10 +222,10 @@ describe('VisiblityService', () => {
 
         const layerBase: Omit<Layer, 'filters' | 'zIndex' | 'id'> = {
             name: 'layer 1',
-            visible: true
+            active: true
         };
 
-        it('should only set elementId for the layer with the highest relevant z-index', async () => {
+        it('should only set elementId for the layer with the lowest relevant z-index', async () => {
             const elements: Element[] = [
                 constructElement({ id: '1' }),
                 constructElement({ id: '2' }),
@@ -284,9 +284,9 @@ describe('VisiblityService', () => {
 
             const elementIdsPerLayer = visibilityService.computeAffectedElementIdsPerLayer(elements, layers);
 
-            expect(elementIdsPerLayer['3']).toStrictEqual(['3']);
-            expect(elementIdsPerLayer['2']).toStrictEqual(['1', '2']);
-            expect(elementIdsPerLayer['1']).toStrictEqual([]);
+            expect(elementIdsPerLayer['3']).toStrictEqual([]);
+            expect(elementIdsPerLayer['2']).toStrictEqual(['1', '3']);
+            expect(elementIdsPerLayer['1']).toStrictEqual(['2']);
             expect(elementIdsPerLayer['-1']).toStrictEqual(['4']);
         });
 
@@ -337,12 +337,12 @@ describe('VisiblityService', () => {
                 {
                     ...layerBase,
                     id: '1',
-                    visible: true
+                    active: true
                 },
                 {
                     ...layerBase,
                     id: '2',
-                    visible: false
+                    active: false
                 }
             ];
 
@@ -374,7 +374,7 @@ describe('VisiblityService', () => {
                 {
                     ...layerBase,
                     id: '1',
-                    visible: true
+                    active: true
                 }
             ];
 
@@ -390,7 +390,7 @@ describe('VisiblityService', () => {
                 {
                     ...layerBase,
                     id: '1',
-                    visible: false
+                    active: false
                 }
             ];
 
@@ -407,7 +407,7 @@ describe('VisiblityService', () => {
     describe('computeAffectedElementIdsForLayer', () => {
         const layerBase: Omit<Layer, 'filters'> = {
             id: '1',
-            visible: true,
+            active: true,
             name: 'layer 1',
             zIndex: 1
         };
