@@ -45,7 +45,6 @@ export class DiagramVisibilityControlActionHandler implements Disposable {
     protected readonly modelState: ExperimentalGLSPServerModelState;
 
     private readonly toDispose = new DisposableCollection();
-    private count = 0;
     private selectedElementIds: { id: string; name: string }[] = [];
 
     @postConstruct()
@@ -54,9 +53,6 @@ export class DiagramVisibilityControlActionHandler implements Disposable {
             this.actionListener.handleVSCodeRequest<RequestDiagramVisibilityControlAction>(
                 RequestDiagramVisibilityControlAction.KIND,
                 async message => {
-                    this.count += message.action.increase;
-                    console.log(`Diagram Visibility Control from VS Code: ${this.count}`);
-
                     const sourceModel = this.modelState.getModelState()?.getSourceModel();
                     const model: Element[] = sourceModel ? this.createModelElements(sourceModel) : [];
 
@@ -68,7 +64,6 @@ export class DiagramVisibilityControlActionHandler implements Disposable {
                     console.log('Selected element IDs from VS Code:', this.selectedElementIds);
 
                     return DiagramVisibilityControlActionResponse.create({
-                        count: this.count,
                         model,
                         selectedElementIds: this.selectedElementIds
                     });

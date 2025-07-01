@@ -24,20 +24,15 @@ export class DiagramVisibilityControlHandler implements IActionHandler {
     @inject(EXPERIMENTAL_TYPES.GLSPServerModelState)
     protected readonly modelState: ExperimentalGLSPServerModelState;
 
-    private count = 0;
     private selectedElementIds: { id: string; name: string }[] = [];
 
     handle(action: Action): ICommand | Action | void {
         if (RequestDiagramVisibilityControlAction.is(action)) {
-            this.count += action.increase;
-            console.log(`Diagram Visibility Control from the GLSP Client: ${this.count}`);
-
             const ids = action.selectedElementIds ?? [];
             this.selectedElementIds = this.getNamesToIds(ids);
             console.log('Selected element IDs from the GLSP Client:', this.selectedElementIds);
 
             return DiagramVisibilityControlActionResponse.create({
-                count: this.count,
                 selectedElementIds: this.selectedElementIds,
                 model: this.modelState
             });

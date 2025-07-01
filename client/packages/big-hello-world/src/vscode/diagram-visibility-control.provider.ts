@@ -95,7 +95,6 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
     protected requestCount(): void {
         this.actionDispatcher.dispatch(
             RequestDiagramVisibilityControlAction.create({
-                increase: 0,
                 model: this.modelState.getModelState(),
                 selectedElementIds: this.selectedIds ?? []
             })
