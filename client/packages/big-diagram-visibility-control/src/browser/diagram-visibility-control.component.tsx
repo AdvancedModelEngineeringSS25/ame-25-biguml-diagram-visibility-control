@@ -117,8 +117,6 @@ export function DiagramVisibilityControl() {
     const toggleActive = (id: string) => {
         console.log('toggleActive clicked', id);
         storeToggle(id);
-
-        recomputeVisibleElements(); // TODO: use to subscribe hook of layerStore
     };
 
     const uploadConfig = () => {
@@ -146,25 +144,25 @@ export function DiagramVisibilityControl() {
         }
     }, [elementIdsPerLayer, visibleElementIds, layers]);
 
-    const recomputeAll = useCallback(() => {
-        console.log('recomputing All');
+    const recomputeAffectedElementIds = useCallback(() => {
+        console.log('recomputeAffectedElementIds');
 
         setElementIdsPerLayer(visibilityService.current.computeAffectedElementIdsPerLayer(model, layers));
-        console.log('elementIdsPerLayer', elementIdsPerLayer.current);
+        console.log('elementIdsPerLayer', elementIdsPerLayer);
 
-        recomputeVisibleElements();
-    }, [layers, elementIdsPerLayer, recomputeVisibleElements, model]);
-
-    useEffect(() => {
-        recomputeVisibleElements();
-    }, [elementIdsPerLayer, recomputeAll, recomputeVisibleElements]);
+        // recomputeVisibleElements();
+    }, [layers, elementIdsPerLayer, model]);
 
     useEffect(() => {
-        console.log({ modelLoaded });
+        recomputeVisibleElements();
+    }, [elementIdsPerLayer, recomputeAffectedElementIds, recomputeVisibleElements]);
 
-        if (!modelLoaded) return;
+    useEffect(() => {
+        console.log('modelLoaded', { modelLoaded });
+        if (modelLoaded) {
+            recomputeAffectedElementIds();
+        }
 
-        recomputeAll();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [modelLoaded]);
 
@@ -181,7 +179,7 @@ export function DiagramVisibilityControl() {
         console.log('goBackToLayers clicked');
         setSelectedLayerId(null);
         setSelectedFilterId(null);
-        recomputeAll();
+        recomputeAffectedElementIds();
     };
 
     const changeLayerType = (id: string, type: Layer['type']) => {
@@ -238,6 +236,7 @@ export function DiagramVisibilityControl() {
     const goBackToLayer = () => {
         console.log('goBackToLayer clicked');
         setSelectedFilterId(null);
+        recomputeAffectedElementIds();
     };
 
     const toggleSelectedType = (layerId: string, filterId: string, type: string) => {
