@@ -52,12 +52,12 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
                 }
             }),
             this.webviewConnector.onReady(() => {
-                this.requestCount();
+                this.requestAction();
                 this.webviewConnector.dispatch(this.actionCache.getActions());
             }),
             this.webviewConnector.onVisible(() => this.webviewConnector.dispatch(this.actionCache.getActions())),
             this.connectionManager.onDidActiveClientChange(() => {
-                this.requestCount();
+                this.requestAction();
             }),
             this.connectionManager.onNoActiveClient(() => {
                 // Send a message to the webview when there is no active client
@@ -68,7 +68,7 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
             }),
             this.selectionService.onDidSelectionChange(() => {
                 this.selectedIds = this.selectionService.selection?.selectedElementsIDs;
-                this.requestCount();
+                this.requestAction();
             }),
             this.connectionManager.onNoConnection(() => {
                 // Send a message to the webview when there is no glsp client
@@ -78,7 +78,7 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
                 this.webviewConnector.dispatch(SendVisibleElementsActionResponse.create());
             }),
             this.modelState.onDidChangeModelState(() => {
-                this.requestCount();
+                this.requestAction();
             })
         );
     }
@@ -92,7 +92,7 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
 
     // }
 
-    protected requestCount(): void {
+    protected requestAction(): void {
         this.actionDispatcher.dispatch(
             RequestDiagramVisibilityControlAction.create({
                 model: this.modelState.getModelState(),
