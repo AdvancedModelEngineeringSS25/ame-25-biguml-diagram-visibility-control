@@ -47,14 +47,16 @@ const LayerSchema = z.object({
     styleClass: z.string().optional()
 });
 
-const LayerStateSchema = z.object({
-    layers: z.array(LayerSchema),
-    configuration: z.string()
+// Updated: Remove LayerStateSchema and configuration field
+// Add LayerStoreSchema to match the new interface structure
+const LayerStoreSchema = z.object({
+    layers: z.array(LayerSchema)
 });
 
-export function validateLayerState(data: unknown): { success: true; data: any } | { success: false; error: string } {
+// Updated: Change function name and return type to match new interface
+export function validateLayerStore(data: unknown): { success: true; data: { layers: any[] } } | { success: false; error: string } {
     try {
-        const validated = LayerStateSchema.parse(data);
+        const validated = LayerStoreSchema.parse(data);
         return { success: true, data: validated };
     } catch (error) {
         if (error instanceof z.ZodError) {
@@ -66,16 +68,14 @@ export function validateLayerState(data: unknown): { success: true; data: any } 
     }
 }
 
-// Alternative: Partial validation for more flexible imports
-export function validateLayerStatePartial(data: unknown): { success: true; data: any } | { success: false; error: string } {
+// Updated: Partial validation for more flexible imports
+export function validateLayerStorePartial(data: unknown): { success: true; data: { layers: any[] } } | { success: false; error: string } {
     try {
         // Create a more lenient schema that fills in defaults for missing fields
-        const PartialLayerStateSchema = z.object({
-            layers: z.array(LayerSchema).default([]),
-            configuration: z.string().default('default')
+        const PartialLayerStoreSchema = z.object({
+            layers: z.array(LayerSchema).default([])
         });
-
-        const validated = PartialLayerStateSchema.parse(data);
+        const validated = PartialLayerStoreSchema.parse(data);
         return { success: true, data: validated };
     } catch (error) {
         if (error instanceof z.ZodError) {

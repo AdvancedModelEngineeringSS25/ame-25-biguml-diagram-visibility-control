@@ -32,7 +32,7 @@ import {
     RequestImportStoreAction
 } from '../common/export-import-state.action.js';
 import type { Element, Type } from '../model/model.js';
-import { validateLayerState } from '../store/validation.js';
+import { validateLayerStore } from '../store/validation.js';
 
 // Handle the action within the server and not the glsp client / server
 @injectable()
@@ -117,7 +117,7 @@ export class DiagramVisibilityControlActionHandler implements Disposable {
                         const parsed = JSON.parse(text);
 
                         // Validate the parsed data
-                        const validation = validateLayerState(parsed);
+                        const validation = validateLayerStore(parsed);
                         if (!validation.success) {
                             vscode.window.showErrorMessage(`Import failed: ${validation.error}`);
                             return ImportStoreActionResponse.create({ data: {} });
