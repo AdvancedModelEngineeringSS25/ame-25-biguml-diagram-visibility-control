@@ -14,7 +14,6 @@ import { Action, RequestAction, type ResponseAction } from '@eclipse-glsp/protoc
 
 export interface RequestDiagramVisibilityControlAction extends RequestAction<DiagramVisibilityControlActionResponse> {
     kind: typeof RequestDiagramVisibilityControlAction.KIND;
-    increase: number;
     model: any | Readonly<UMLSourceModel> | undefined;
     selectedElementIds?: string[];
 }
@@ -39,7 +38,6 @@ export namespace RequestDiagramVisibilityControlAction {
 
 export interface DiagramVisibilityControlActionResponse extends ResponseAction {
     kind: typeof DiagramVisibilityControlActionResponse.KIND;
-    count: number;
     model: any | Readonly<UMLSourceModel> | undefined;
     // model: ReturnType<ReturnType<ExperimentalGLSPServerModelState['getModelState']>['getSourceModel']>;
     selectedElementIds?: { id: string; name: string }[];
@@ -58,7 +56,6 @@ export namespace DiagramVisibilityControlActionResponse {
             kind: KIND,
             responseId: '',
             model: undefined,
-            count: 0,
             ...options
         };
     }
