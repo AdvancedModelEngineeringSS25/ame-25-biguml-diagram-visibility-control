@@ -40,7 +40,8 @@ const FilterSchema = z.discriminatedUnion('type', [TypeFilterSchema, PatternFilt
 const LayerSchema = z.object({
     id: z.string(),
     name: z.string(),
-    visible: z.boolean(),
+    active: z.boolean(),
+    type: z.string(),
     zIndex: z.number(),
     filters: z.array(FilterSchema),
     groupId: z.string().optional(),
