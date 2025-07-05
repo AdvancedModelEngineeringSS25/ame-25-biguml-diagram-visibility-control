@@ -1,13 +1,46 @@
 {
   "layers": [
     {
-      "id": "8bc594f5-24ad-4ffa-954a-c956e3daa5ee",
-      "name": "Selection: Property (studentsCountInLecture)",
+      "id": "67731a21-aebc-4455-bdbc-980170460fff",
+      "name": "Hide Layers with names that end with \"le\"",
       "zIndex": 0,
-      "visible": true,
+      "active": true,
+      "type": "hide",
       "filters": [
         {
-          "id": "5a37dea5-2915-49a7-8c65-3d764ca89f24",
+          "id": "20c17697-1764-442d-84d6-4cc095d02758",
+          "name": "Filter 1",
+          "type": "pattern",
+          "pattern": "/le$/",
+          "types": []
+        }
+      ]
+    },
+    {
+      "id": "0a413a50-177b-4fdd-8425-eb33b0595d50",
+      "name": "Show layer with name \"LectureRepository\"",
+      "zIndex": 1,
+      "active": true,
+      "type": "show",
+      "filters": [
+        {
+          "id": "c81b01a1-05b4-49cb-9f46-8c5523f645f9",
+          "name": "Filter 1",
+          "type": "pattern",
+          "pattern": "LectureRepository",
+          "types": []
+        }
+      ]
+    },
+    {
+      "id": "f11b976b-d361-48c7-ba28-d8b1fd5cc032",
+      "name": "Hide Properties of LectureService",
+      "active": true,
+      "type": "hide",
+      "zIndex": 2,
+      "filters": [
+        {
+          "id": "a3c5b987-c20d-4d3e-bc20-c8de8ce9dd60",
           "name": "Filter 1",
           "type": "selection",
           "elements": [
@@ -20,13 +53,14 @@
       ]
     },
     {
-      "id": "21a6c0dd-2ddb-4abf-8994-489cb445e128",
-      "name": "Selection: LectureService",
-      "zIndex": 1,
-      "visible": true,
+      "id": "6e4fcfa4-100c-4626-976d-6ed9da3a6b7c",
+      "name": "Show LectureService",
+      "active": true,
+      "type": "show",
+      "zIndex": 3,
       "filters": [
         {
-          "id": "f4aa957c-3f3f-4976-bb66-b56db60682ad",
+          "id": "48f35a2d-ee2f-4f82-af7c-474e65f33b17",
           "name": "Filter 1",
           "type": "selection",
           "elements": [
@@ -39,41 +73,18 @@
       ]
     },
     {
-      "id": "2d80dcb5-a716-4696-aaf0-a2644f6ca766",
-      "name": "Interface OR Primitve",
-      "zIndex": 2,
-      "visible": true,
+      "id": "c0c42530-e6ec-4871-b974-6779cdf4926e",
+      "name": "Hide all Elements of type \"Interface\"",
+      "zIndex": 4,
+      "active": true,
+      "type": "hide",
       "filters": [
         {
-          "id": "d028eb69-45c7-4faf-8fc9-610cd309f798",
+          "id": "9d701b46-be88-4ea4-94a7-ea18d75f7917",
           "name": "Filter 1",
           "type": "type",
           "types": [
-            "Interface",
-            "PrimitiveType"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "40432d26-e157-46d1-a2dc-5dafafd8698f",
-      "name": "Starts with \"L\" AND is Type Class",
-      "zIndex": 3,
-      "visible": true,
-      "filters": [
-        {
-          "id": "bf547006-7c3d-4ad2-ba66-75de0b2483fc",
-          "name": "Starts with \"L\"",
-          "type": "pattern",
-          "pattern": "/^L/",
-          "types": []
-        },
-        {
-          "id": "7f7bf9ab-8480-4ce7-bf54-855ab13628e7",
-          "name": "Is Class",
-          "type": "type",
-          "types": [
-            "Class"
+            "Interface"
           ]
         }
       ]

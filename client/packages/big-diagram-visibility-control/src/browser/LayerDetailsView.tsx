@@ -60,7 +60,13 @@ export function LayerDetailsView({
     return (
         <div id='layer-details-view'>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
-                <VSCodeButton slot='anchor' appearance='icon' onClick={onBack} style={{ display: 'flex', alignItems: 'center' }}>
+                <VSCodeButton
+                    slot='anchor'
+                    appearance='icon'
+                    onClick={onBack}
+                    style={{ display: 'flex', alignItems: 'center' }}
+                    title='Go back to Layers'
+                >
                     <div className='codicon codicon-chevron-left'></div>
                 </VSCodeButton>
                 <h2>Edit Layer</h2>
@@ -94,8 +100,12 @@ export function LayerDetailsView({
                             changeLayerType(layer.id, newValue as Layer['type']);
                         }}
                     >
-                        <VSCodeRadio value='show'>Show</VSCodeRadio>
-                        <VSCodeRadio value='hide'>Hide</VSCodeRadio>
+                        <VSCodeRadio value='show' title='Targeted Elements will be visible'>
+                            Show
+                        </VSCodeRadio>
+                        <VSCodeRadio value='hide' title='Targeted Elements will be hidden'>
+                            Hide
+                        </VSCodeRadio>
                     </VSCodeRadioGroup>
                 </div>
                 {/* <VSCodeCheckbox
@@ -131,10 +141,11 @@ export function LayerDetailsView({
                             className='action-delete'
                             appearance='icon'
                             onClick={() => deleteFilter(layer.id, filter.id)}
+                            title='Delete Filter'
                         >
                             <div className='codicon codicon-trash'></div>
                         </VSCodeButton>
-                        <VSCodeButton slot='anchor' appearance='icon' onClick={() => onFilterSelect(filter.id)}>
+                        <VSCodeButton slot='anchor' appearance='icon' onClick={() => onFilterSelect(filter.id)} title='Configue Filter'>
                             <div className='codicon codicon-chevron-right'></div>
                         </VSCodeButton>
                     </div>
@@ -144,12 +155,18 @@ export function LayerDetailsView({
             <VSCodeDivider />
             <footer style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
                 <div id='secondary-footer-buttons' style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
-                    <VSCodeButton slot='anchor' className='action-delete' appearance='icon' onClick={() => deleteLayer(layer.id)}>
+                    <VSCodeButton
+                        slot='anchor'
+                        className='action-delete'
+                        appearance='icon'
+                        onClick={() => deleteLayer(layer.id)}
+                        title='Delete Layer'
+                    >
                         <div className='codicon codicon-trash'></div>
                     </VSCodeButton>
                 </div>
                 <div id='primary-footer-button' style={{ position: 'relative', marginLeft: 'auto' }}>
-                    <VSCodeButton slot='anchor' appearance='icon' onClick={handleAddClick}>
+                    <VSCodeButton slot='anchor' appearance='icon' onClick={handleAddClick} title='Add a new Filter'>
                         <div className='codicon codicon-add'></div>
                     </VSCodeButton>
 

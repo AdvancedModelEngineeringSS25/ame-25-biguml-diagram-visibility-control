@@ -190,6 +190,7 @@ export function DiagramVisibilityControl() {
     const deleteLayer = (id: string) => {
         console.log('deleteLayer clicked', id);
         storeDeleteLayer(id);
+        goBackToLayers();
     };
 
     const changeLayerName = (id: string, name: string) => {

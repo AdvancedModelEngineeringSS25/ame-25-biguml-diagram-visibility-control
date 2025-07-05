@@ -6,21 +6,17 @@
  *
  * SPDX-License-Identifier: MIT
  **********************************************************************************/
-import { BigCheckbox } from '@borkdominik-biguml/big-components';
 import { VSCodeTextField } from '@vscode/webview-ui-toolkit/react/index.js';
 import type { PatternFilter } from '../model/model.js';
-import { ALL_TYPES } from '../model/model.js';
 
 export function PatternFilterEditor({
     layerId,
     filter,
-    changePattern,
-    toggleSelectedType
+    changePattern
 }: {
     layerId: string;
     filter: PatternFilter;
     changePattern: (layerId: string, filterId: string, pattern: string) => void;
-    toggleSelectedType: (layerId: string, filterId: string, type: string) => void;
 }) {
     return (
         <div>
@@ -33,7 +29,7 @@ export function PatternFilterEditor({
                 value={filter.pattern}
             />
             <small style={{ marginBlockStart: '0.5em' }}>If your input starts with &apos;/&apos; it is parsed as RegEx</small> <br />
-            <label>Types:</label>
+            {/* <label>Types:</label>
             <div>
                 {ALL_TYPES.map((type, index) => (
                     <div key={index}>
@@ -47,7 +43,7 @@ export function PatternFilterEditor({
                         </div>
                     </div>
                 ))}
-            </div>
+            </div> */}
         </div>
     );
 }

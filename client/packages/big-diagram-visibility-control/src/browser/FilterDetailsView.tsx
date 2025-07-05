@@ -34,7 +34,13 @@ export function FilterDetailsView({
     return (
         <div className='flex flex-col gap-4'>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px', marginLeft: '-4px' }}>
-                <VSCodeButton slot='anchor' appearance='icon' onClick={onBack} style={{ display: 'flex', alignItems: 'center' }}>
+                <VSCodeButton
+                    slot='anchor'
+                    appearance='icon'
+                    onClick={onBack}
+                    style={{ display: 'flex', alignItems: 'center' }}
+                    title='Go back to Layer'
+                >
                     <div className='codicon codicon-chevron-left'></div>
                 </VSCodeButton>
                 <h2>Edit Filter</h2>
@@ -48,14 +54,7 @@ export function FilterDetailsView({
             />
             <VSCodeDivider />
             {filter.type === 'type' && <TypeFilterEditor layerId={layerId} filter={filter} toggleSelectedType={toggleSelectedType} />}
-            {filter.type === 'pattern' && (
-                <PatternFilterEditor
-                    layerId={layerId}
-                    filter={filter}
-                    changePattern={changePattern}
-                    toggleSelectedType={toggleSelectedType}
-                />
-            )}
+            {filter.type === 'pattern' && <PatternFilterEditor layerId={layerId} filter={filter} changePattern={changePattern} />}
             {filter.type === 'selection' && (
                 <SelectionFilterEditor filter={filter} deleteSelectedElement={deleteSelectedElement} addSelection={addSelection} />
             )}
