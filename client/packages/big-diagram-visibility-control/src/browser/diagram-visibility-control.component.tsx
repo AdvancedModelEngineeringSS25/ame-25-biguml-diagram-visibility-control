@@ -9,7 +9,6 @@
 import { VSCodeContext } from '@borkdominik-biguml/big-components';
 
 import {
-    ExportStoreActionResponse,
     ImportStoreActionResponse,
     RequestExportStoreAction,
     RequestImportStoreAction,
@@ -52,21 +51,13 @@ export function DiagramVisibilityControl() {
 
     useEffect(() => {
         listenAction(action => {
-            if (ExportStoreActionResponse.is(action)) {
-                console.log('Client ExportStoreActionResponse', action.success);
-            }
             if (ImportStoreActionResponse.is(action)) {
-                console.log('Save in store');
                 const storeData = action.data;
-                console.log('storeData', storeData);
 
                 // Additional safety check - ensure we're not setting empty data
                 if (storeData && Object.keys(storeData).length > 0) {
                     // The data is already validated at this point, so we can safely set it
                     useLayerStore.setState(storeData);
-                    console.log('Store updated', useLayerStore.getState());
-                } else {
-                    console.log('No valid data to import, keeping current state');
                 }
             }
         });
@@ -80,7 +71,6 @@ export function DiagramVisibilityControl() {
     // Send visible elements to VS Code when they change
     const sendVisibleElementsToVSCode = useCallback(
         (elementIds: string[]) => {
-            console.log('Sending visible elements to VS Code:', elementIds);
             dispatchAction(
                 RequestSendVisibleElementsAction.create({
                     visibleElementIds: elementIds
@@ -101,33 +91,27 @@ export function DiagramVisibilityControl() {
     ******************/
 
     const moveUp = (id: string) => {
-        console.log('moveUp clicked', id);
         const from = layers.findIndex(l => l.id === id);
         if (from <= 0) return; // already top or not found
         storeReorder(from, from - 1);
     };
 
     const moveDown = (id: string) => {
-        console.log('moveDown clicked', id);
         const from = layers.findIndex(l => l.id === id);
         if (from < 0 || from >= layers.length - 1) return; // already bottom or not found
         storeReorder(from, from + 1);
     };
 
     const toggleActive = (id: string) => {
-        console.log('toggleActive clicked', id);
         storeToggle(id);
     };
 
     const uploadConfig = () => {
-        console.log('uploadConfig clicked');
         dispatchAction(RequestImportStoreAction.create({}));
     };
 
     const saveConfig = () => {
-        console.log('saveConfig clicked');
         const model = useLayerStore.getState().getModel(); // get current config
-        console.log('model', JSON.stringify(model, null, 2));
         dispatchAction(
             RequestExportStoreAction.create({
                 data: JSON.stringify(model, null, 2) // send actual data, not dummy string
@@ -137,7 +121,6 @@ export function DiagramVisibilityControl() {
 
     const recomputeVisibleElements = useCallback(() => {
         const visbleElementIds = visibilityService.current.computeVisibleElementIds(elementIdsPerLayer, layers);
-        console.log('visbleElementIds', visbleElementIds);
 
         if (!isEqual(visibleElementIds, visbleElementIds)) {
             setVisibleElementIds(visbleElementIds);
@@ -145,20 +128,14 @@ export function DiagramVisibilityControl() {
     }, [elementIdsPerLayer, visibleElementIds, layers]);
 
     const recomputeAffectedElementIds = useCallback(() => {
-        console.log('recomputeAffectedElementIds');
-
         setElementIdsPerLayer(visibilityService.current.computeAffectedElementIdsPerLayer(model, layers));
-        console.log('elementIdsPerLayer', elementIdsPerLayer);
-
-        // recomputeVisibleElements();
-    }, [layers, elementIdsPerLayer, model]);
+    }, [layers, model]);
 
     useEffect(() => {
         recomputeVisibleElements();
     }, [elementIdsPerLayer, recomputeAffectedElementIds, recomputeVisibleElements]);
 
     useEffect(() => {
-        console.log('modelLoaded', { modelLoaded });
         if (modelLoaded) {
             recomputeAffectedElementIds();
         }
@@ -167,7 +144,6 @@ export function DiagramVisibilityControl() {
     }, [modelLoaded]);
 
     const addLayer = () => {
-        console.log('addLayer clicked');
         storeAddLayer();
     };
 
@@ -176,30 +152,25 @@ export function DiagramVisibilityControl() {
     **********************/
 
     const goBackToLayers = () => {
-        console.log('goBackToLayers clicked');
         setSelectedLayerId(null);
         setSelectedFilterId(null);
         recomputeAffectedElementIds();
     };
 
     const changeLayerType = (id: string, type: Layer['type']) => {
-        console.log('changeLayerType clicked', id, type);
         storeUpdateLayer(id, { type });
     };
 
     const deleteLayer = (id: string) => {
-        console.log('deleteLayer clicked', id);
         storeDeleteLayer(id);
         goBackToLayers();
     };
 
     const changeLayerName = (id: string, name: string) => {
-        console.log('changeLayerName clicked', id, name);
         storeUpdateLayer(id, { name });
     };
 
     const addFilter = (layerId: string, type: 'type' | 'pattern' | 'selection') => {
-        console.log('addFilter clicked', type);
         const f: Filter = storeAddFilter(layerId, type);
         if (f.type == 'selection') {
             storeUpdateFilter(layerId, f.id, {
@@ -216,26 +187,22 @@ export function DiagramVisibilityControl() {
     ***********************/
 
     const deleteFilter = (layerId: string, filterId: string) => {
-        console.log('deleteFilter clicked', layerId, filterId);
         storeDeleteFilter(layerId, filterId);
     };
 
     const changeFilterName = (layerId: string, filterId: string, name: string) => {
-        console.log('changeFilterName clicked', layerId, filterId, name);
         storeUpdateLayer(layerId, {
             filters: selectedLayer?.filters.map(f => (f.id === filterId ? { ...f, name } : f)) || []
         });
     };
 
     const changePattern = (layerId: string, filterId: string, pattern: string) => {
-        console.log('changePattern clicked', layerId, filterId, pattern);
         storeUpdateLayer(layerId, {
             filters: selectedLayer?.filters.map(f => (f.id === filterId ? { ...f, pattern } : f)) || []
         });
     };
 
     const goBackToLayer = () => {
-        console.log('goBackToLayer clicked');
         setSelectedFilterId(null);
         recomputeAffectedElementIds();
     };
@@ -268,12 +235,10 @@ export function DiagramVisibilityControl() {
         storeUpdateFilter(layerId, filterId, updatedFilter);
     };
     const deleteSelectedElement = (id: string) => {
-        console.log('deleteSelectedElement clicked', id);
         storeDeleteSelectedElement(selectedLayerId ?? '', selectedFilterId ?? '', id);
     };
 
-    const addSelection = (id: string) => {
-        console.log('addSelection clicked', id);
+    const addSelection = () => {
         storeAddSelectedElements(selectedLayerId ?? '', selectedFilterId ?? '', selectedElementIdsRef.current);
     };
 
@@ -285,7 +250,6 @@ export function DiagramVisibilityControl() {
         listenAction(action => {
             if (DiagramVisibilityControlActionResponse.is(action)) {
                 selectedElementIdsRef.current = action.selectedElementIds ?? [];
-                console.log(action.model);
                 setModel(action.model ?? []);
 
                 if (!modelLoaded && action.model && action.model.length > 0) {

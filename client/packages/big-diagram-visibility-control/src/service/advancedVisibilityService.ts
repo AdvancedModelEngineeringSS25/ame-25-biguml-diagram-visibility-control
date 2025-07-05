@@ -33,8 +33,6 @@ export class AdvancedVisibilityService extends VisibilityService implements IVis
 
         elementIdsPerLayer['default'] = this.extractAllElementIds(elements) ?? [];
 
-        console.log('elementIdsPerLayer', elementIdsPerLayer);
-
         return elementIdsPerLayer;
     }
 
@@ -57,8 +55,6 @@ export class AdvancedVisibilityService extends VisibilityService implements IVis
 
             const affectedElementIds = elementIds[layer.id] || [];
 
-            console.log(layer.name, layer.type, layer.active, { affectedElementIds });
-
             for (const elementId of affectedElementIds) {
                 if (isElementHandled(elementId)) continue;
 
@@ -69,8 +65,6 @@ export class AdvancedVisibilityService extends VisibilityService implements IVis
                 }
             }
         }
-
-        console.log({ allElements, visibleElementIds, hiddenElementIds });
 
         // Add remaining elements that are not affected by any layer
         visibleElementIds.push(...allElements.filter(id => !isElementHandled(id)));

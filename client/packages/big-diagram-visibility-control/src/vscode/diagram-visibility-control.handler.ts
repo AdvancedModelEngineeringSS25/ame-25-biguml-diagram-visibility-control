@@ -56,12 +56,8 @@ export class DiagramVisibilityControlActionHandler implements Disposable {
                     const sourceModel = this.modelState.getModelState()?.getSourceModel();
                     const model: Element[] = sourceModel ? this.createModelElements(sourceModel) : [];
 
-                    console.log('Current Model from VS Code', { sourceModel });
-                    console.log('Current Model in internal representation', { model });
-
                     const ids = message.action.selectedElementIds ?? [];
                     this.selectedElementIds = this.getNamesToIds(ids);
-                    console.log('Selected element IDs from VS Code:', this.selectedElementIds);
 
                     return DiagramVisibilityControlActionResponse.create({
                         model,
@@ -72,8 +68,6 @@ export class DiagramVisibilityControlActionHandler implements Disposable {
         );
         this.toDispose.push(
             this.actionListener.handleVSCodeRequest<RequestExportStoreAction>(RequestExportStoreAction.KIND, async message => {
-                console.log(`Export Store from VS Code: ${message.action.data}`);
-
                 const uri = await vscode.window.showSaveDialog({
                     title: 'Save Configuration File',
                     defaultUri: vscode.Uri.file('configuration-file.json'),
@@ -150,17 +144,6 @@ export class DiagramVisibilityControlActionHandler implements Disposable {
             this.actionListener.handleVSCodeRequest<RequestSendVisibleElementsAction>(
                 RequestSendVisibleElementsAction.KIND,
                 async message => {
-                    console.log('FOR HAYDER :-D');
-                    console.log('Received visible elements from React:', message.action.visibleElementIds);
-
-                    // Print the visible element IDs to VS Code console
-                    console.log('=== VISIBLE ELEMENTS ===');
-                    message.action.visibleElementIds.forEach((id, index) => {
-                        console.log(`${index + 1}. ${id}`);
-                    });
-                    console.log(`Total visible elements: ${message.action.visibleElementIds.length}`);
-                    console.log('========================');
-
                     // You can also show them in VS Code's information message if needed
                     if (message.action.visibleElementIds.length > 0) {
                         vscode.window.showInformationMessage(

@@ -17,8 +17,6 @@ export class VisibilityService implements IVisibilityService {
 
         const sortedLayers = layers.sort((a, b) => a.zIndex - b.zIndex);
 
-        console.log('sortedLayers', sortedLayers);
-
         for (const layer of sortedLayers) {
             const layerElementIds = this.computeAffectedElementIdsForLayer(elements, layer);
 
@@ -32,8 +30,6 @@ export class VisibilityService implements IVisibilityService {
         }
 
         elementIdsPerLayer['default'] = this.extractAllElementIds(elements).filter(id => !seenIds.includes(id));
-
-        console.log('elementIdsPerLayer', elementIdsPerLayer);
 
         return elementIdsPerLayer;
     }
@@ -82,8 +78,6 @@ export class VisibilityService implements IVisibilityService {
     }
 
     computeAffectedElementIdsForTypeFilter(elements: Element[], filter: TypeFilter): ElementId[] {
-        console.log(elements, filter);
-
         const types = filter.types;
         const affectedElementIds = new Set<ElementId>();
 
@@ -147,13 +141,11 @@ export class VisibilityService implements IVisibilityService {
 
                 if (element.children) {
                     const childIds = this.extractAllElementIds(element.children);
-                    console.log({ childIds });
 
                     childIds.forEach(childId => affectedElementIds.add(childId));
                 }
             } else if (element.children) {
                 const affectedChildren = this.computeAffectedElementIdsForSelectionFilter(element.children, filter);
-                console.log({ affectedChildren });
 
                 affectedChildren.forEach(childId => affectedElementIds.add(childId));
             }

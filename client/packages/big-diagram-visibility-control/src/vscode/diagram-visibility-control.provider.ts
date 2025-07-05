@@ -83,8 +83,7 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
         );
     }
     // protected requestExportSuccess(): void {
-    //     console.log('Report export success');
-    //     this.actionDispatcher.dispatch(
+    //         //     this.actionDispatcher.dispatch(
     //         RequestExportStoreAction.create({
 
     //         })

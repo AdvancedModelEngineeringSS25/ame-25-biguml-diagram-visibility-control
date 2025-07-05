@@ -30,7 +30,6 @@ export class DiagramVisibilityControlHandler implements IActionHandler {
         if (RequestDiagramVisibilityControlAction.is(action)) {
             const ids = action.selectedElementIds ?? [];
             this.selectedElementIds = this.getNamesToIds(ids);
-            console.log('Selected element IDs from the GLSP Client:', this.selectedElementIds);
 
             return DiagramVisibilityControlActionResponse.create({
                 selectedElementIds: this.selectedElementIds,
