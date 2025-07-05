@@ -54,8 +54,6 @@ export interface Layer {
     styleClass?: string;
 }
 
-// export const ALL_TYPES = ['class', 'property', 'relation', 'method', 'interface'] as const;
-
 export const ALL_TYPES = [
     'Class',
     'Interface',

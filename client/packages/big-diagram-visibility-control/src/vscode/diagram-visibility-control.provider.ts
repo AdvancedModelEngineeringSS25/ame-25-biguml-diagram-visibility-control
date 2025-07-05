@@ -47,9 +47,6 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
         this.toDispose.push(
             this.actionCache.onDidChange(message => {
                 this.webviewConnector.dispatch(message);
-                if (DiagramVisibilityControlActionResponse.is(message)) {
-                    // this.selectedIds = message.selectedElementIds ?? [];
-                }
             }),
             this.webviewConnector.onReady(() => {
                 this.requestAction();
@@ -60,7 +57,6 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
                 this.requestAction();
             }),
             this.connectionManager.onNoActiveClient(() => {
-                // Send a message to the webview when there is no active client
                 this.webviewConnector.dispatch(DiagramVisibilityControlActionResponse.create());
                 this.webviewConnector.dispatch(ExportStoreActionResponse.create());
                 this.webviewConnector.dispatch(ImportStoreActionResponse.create());
@@ -71,7 +67,6 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
                 this.requestAction();
             }),
             this.connectionManager.onNoConnection(() => {
-                // Send a message to the webview when there is no glsp client
                 this.webviewConnector.dispatch(DiagramVisibilityControlActionResponse.create());
                 this.webviewConnector.dispatch(ExportStoreActionResponse.create());
                 this.webviewConnector.dispatch(ImportStoreActionResponse.create());
@@ -82,14 +77,6 @@ export class DiagramVisibilityControlProvider extends BIGReactWebview {
             })
         );
     }
-    // protected requestExportSuccess(): void {
-    //         //     this.actionDispatcher.dispatch(
-    //         RequestExportStoreAction.create({
-
-    //         })
-    //     );
-
-    // }
 
     protected requestAction(): void {
         this.actionDispatcher.dispatch(

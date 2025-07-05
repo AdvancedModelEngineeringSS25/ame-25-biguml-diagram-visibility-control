@@ -6,10 +6,6 @@
  *
  * SPDX-License-Identifier: MIT
  *********************************************************************************/
-//import {
-//    EXPERIMENTAL_TYPES,
-//    type ExperimentalGLSPServerModelState
-//} from '@borkdominik-biguml/big-vscode-integration/vscode';
 
 import { EXPERIMENTAL_TYPES, type ExperimentalGLSPServerModelState } from '@borkdominik-biguml/big-vscode-integration/vscode';
 import type { Action, IActionHandler, ICommand } from '@eclipse-glsp/client';
@@ -39,7 +35,6 @@ export class DiagramVisibilityControlHandler implements IActionHandler {
     }
 
     private getNamesToIds(ids: string[]): { id: string; name: string }[] {
-        // just use ids as names, since ExperimentalGLSPServerModelState cannot be used here
         const elements: { id: string; name: string }[] = [];
 
         ids.forEach(id => elements.push({ id: id, name: id }));

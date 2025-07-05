@@ -15,6 +15,6 @@ div {
 #layer-style {
     display: flex;
     flex-direction: row;
-    gap: 4px; /* optional: spacing between buttons */
-    align-items: center; /* optional: vertical alignment */
+    gap: 4px;
+    align-items: center;
 }

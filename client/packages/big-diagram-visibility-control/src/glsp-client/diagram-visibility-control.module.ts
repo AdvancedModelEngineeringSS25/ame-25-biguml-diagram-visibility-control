@@ -7,24 +7,7 @@
  * SPDX-License-Identifier: MIT
  **********************************************************************************/
 /*
-// use this block to use GLSP handler
-//import { configureActionHandler, FeatureModule } from '@eclipse-glsp/client';
-//import { ExtensionActionKind } from '@eclipse-glsp/vscode-integration-webview/lib/features/default/extension-action-handler.js';
-//import { DiagramVisibilityControlActionResponse, RequestDiagramVisibilityControlAction } from '../common/diagram-visibility-control.action.js';
-//import { DiagramVisibilityControlHandler } from './diagram-visibility-control.handler.js';
-
-//export const DiagramVisibilityControlModule = new FeatureModule((bind, unbind, isBound, rebind) => {
-    //const context = { bind, unbind, isBound, rebind };
-    // Register the DiagramVisibilityControlHandler to handle the RequestDiagramVisibilityControlAction
-    //bind(DiagramVisibilityControlHandler).toSelf().inSingletonScope();
-    //configureActionHandler(context, RequestDiagramVisibilityControlAction.KIND, DiagramVisibilityControlHandler);
-
-    // Allow the DiagramVisibilityControlActionResponse to propagate to the server
-    //bind(ExtensionActionKind).toConstantValue(DiagramVisibilityControlActionResponse.KIND);
-//});
-*/
-
-// use this block to use vs-code handler
+ */
 import { FeatureModule } from '@eclipse-glsp/client';
 import { ExtensionActionKind } from '@eclipse-glsp/vscode-integration-webview';
 import { DiagramVisibilityControlActionResponse, SendVisibleElementsActionResponse } from '../common/diagram-visibility-control.action.js';

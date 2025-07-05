@@ -8,8 +8,6 @@
  **********************************************************************************/
 import { type Layer } from '../model/model.js';
 import { useLayerStore } from './layerStore.js';
-
-// development-only seed ---------------------------------
 const sampleLayers: Layer[] = [
     {
         id: '1',
@@ -42,10 +40,7 @@ const sampleLayers: Layer[] = [
 ];
 
 export const seedStore = () => {
-    // if (import.meta.env.MODE === 'development') {
-    // push only if store is still empty
     if (useLayerStore.getState().layers.length === 0) {
         useLayerStore.setState({ layers: sampleLayers });
     }
-    // }
 };

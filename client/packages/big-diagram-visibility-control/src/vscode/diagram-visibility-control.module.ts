@@ -20,13 +20,6 @@ export function DiagramVisibilityControlModule(viewId: string) {
         bind(DiagramVisibilityControlProvider).toSelf().inSingletonScope();
         bind(TYPES.Disposable).toService(DiagramVisibilityControlProvider);
         bind(TYPES.RootInitialization).toService(DiagramVisibilityControlProvider);
-
-        // Handle the request vscode side
-        // This will prevent the glsp to handle the request
-        // Remember to comment out the the glsp client handler!
-        // In DiagramVisibilityControlActionHandler implementation GLSP has priority over vscode
-
-        // comment this block to use GLSP handlerconso
         bind(DiagramVisibilityControlActionHandler).toSelf().inSingletonScope();
         bind(TYPES.Disposable).toService(DiagramVisibilityControlActionHandler);
         bind(TYPES.RootInitialization).toService(DiagramVisibilityControlActionHandler);

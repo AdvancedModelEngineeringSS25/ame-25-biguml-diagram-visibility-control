@@ -33,8 +33,6 @@ import {
 } from '../common/export-import-state.action.js';
 import type { Element, Type } from '../model/model.js';
 import { validateLayerStore } from '../store/validation.js';
-
-// Handle the action within the server and not the glsp client / server
 @injectable()
 export class DiagramVisibilityControlActionHandler implements Disposable {
     @inject(TYPES.ActionDispatcher)
@@ -90,8 +88,6 @@ export class DiagramVisibilityControlActionHandler implements Disposable {
                         return ExportStoreActionResponse.create({ success: false });
                     }
                 }
-
-                // User canceled the dialog
                 return ExportStoreActionResponse.create({ success: false });
             })
         );
@@ -109,8 +105,6 @@ export class DiagramVisibilityControlActionHandler implements Disposable {
                         const content = await vscode.workspace.fs.readFile(uri[0]);
                         const text = Buffer.from(content).toString('utf8');
                         const parsed = JSON.parse(text);
-
-                        // Validate the parsed data
                         const validation = validateLayerStore(parsed);
                         if (!validation.success) {
                             vscode.window.showErrorMessage(`Import failed: ${validation.error}`);
@@ -138,23 +132,11 @@ export class DiagramVisibilityControlActionHandler implements Disposable {
                 return ImportStoreActionResponse.create({ data: {} });
             })
         );
-
-        // Handle the new visible elements action
         this.toDispose.push(
             this.actionListener.handleVSCodeRequest<RequestSendVisibleElementsAction>(
                 RequestSendVisibleElementsAction.KIND,
                 async message => {
-                    // You can also show them in VS Code's information message if needed
-                    if (message.action.visibleElementIds.length > 0) {
-                        vscode.window.showInformationMessage(
-                            `Visible Elements Updated: ${message.action.visibleElementIds.length} elements visible`
-                        );
-                    }
-
                     const visibleElementIds = message.action.visibleElementIds;
-                    // Demonstration that the parent of _u0BjIDyYEfCfmP9ZVqTduw (operation() within a class) makes the class visible
-                    // while the class was not provided in the visibleElementIds.
-                    // const visibleElementIds = [...message.action.visibleElementIds, '_u0BjIDyYEfCfmP9ZVqTduw'];
 
                     this.actionDispatcher.dispatch({
                         kind: 'setVisibleElements',

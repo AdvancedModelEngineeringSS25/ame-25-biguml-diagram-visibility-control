@@ -53,10 +53,7 @@ export function DiagramVisibilityControl() {
         listenAction(action => {
             if (ImportStoreActionResponse.is(action)) {
                 const storeData = action.data;
-
-                // Additional safety check - ensure we're not setting empty data
                 if (storeData && Object.keys(storeData).length > 0) {
-                    // The data is already validated at this point, so we can safely set it
                     useLayerStore.setState(storeData);
                 }
             }
@@ -68,7 +65,6 @@ export function DiagramVisibilityControl() {
     const visibilityService = useRef<IVisibilityService>(new AdvancedVisibilityService());
 
     useLayerStore();
-    // Send visible elements to VS Code when they change
     const sendVisibleElementsToVSCode = useCallback(
         (elementIds: string[]) => {
             dispatchAction(
@@ -79,8 +75,6 @@ export function DiagramVisibilityControl() {
         },
         [dispatchAction]
     );
-
-    // Effect to send visible elements when they change
     useEffect(() => {
         if (!modelLoaded) return;
         sendVisibleElementsToVSCode(visibleElementIds);
@@ -139,9 +133,7 @@ export function DiagramVisibilityControl() {
         if (modelLoaded) {
             recomputeAffectedElementIds();
         }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [modelLoaded]);
+    }, [modelLoaded, recomputeAffectedElementIds]);
 
     const addLayer = () => {
         storeAddLayer();
@@ -208,16 +200,11 @@ export function DiagramVisibilityControl() {
     };
 
     const toggleSelectedType = (layerId: string, filterId: string, type: string) => {
-        // const allowedTypes = ['class', 'property', 'relation', 'method', 'interface'];
-        // if (!allowedTypes.includes(type)) return;
-
         const layer = useLayerStore.getState().layers.find(l => l.id === layerId);
         if (!layer) return;
 
         const filter = layer.filters.find(f => f.id === filterId);
         if (!filter || filter.type == 'selection') return;
-
-        // Ensure types is of the correct literal type array
         const currentTypes = Array.isArray((filter as any).types) ? ((filter as any).types as string[]) : [];
 
         const typesSet = new Set(currentTypes);
@@ -307,17 +294,6 @@ export function DiagramVisibilityControl() {
                 saveConfig={saveConfig}
                 addLayer={addLayer}
             />
-            {/* <br />
-            <br />
-            <h2>Visible Element IDs</h2>
-            {visibleElementIds.map(item => {
-                const isNotTargetedByLayer = elementIdsPerLayer['default'].includes(item);
-                return (
-                    <div key={item} style={{ opacity: isNotTargetedByLayer ? 0.5 : 1 }}>
-                        {item}
-                    </div>
-                );
-            })} */}
         </>
     );
 }

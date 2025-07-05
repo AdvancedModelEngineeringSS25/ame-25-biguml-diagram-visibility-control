@@ -6,7 +6,6 @@
  *
  * SPDX-License-Identifier: MIT
  **********************************************************************************/
-// Minimal browser helper to pick a .json file and return its text
 export const pickJsonFile = (): Promise<string | null> =>
     new Promise(resolve => {
         const input = document.createElement('input');

@@ -8,8 +8,6 @@
  **********************************************************************************/
 import { Action, RequestAction, type ResponseAction } from '@eclipse-glsp/protocol';
 
-// === EXPORT ACTION ===
-
 export interface RequestExportStoreAction extends RequestAction<ExportStoreActionResponse> {
     kind: typeof RequestExportStoreAction.KIND;
     data: unknown;
@@ -54,8 +52,6 @@ export namespace ExportStoreActionResponse {
         };
     }
 }
-
-// === IMPORT ACTION ===
 
 export interface RequestImportStoreAction extends RequestAction<ImportStoreActionResponse> {
     kind: typeof RequestImportStoreAction.KIND;

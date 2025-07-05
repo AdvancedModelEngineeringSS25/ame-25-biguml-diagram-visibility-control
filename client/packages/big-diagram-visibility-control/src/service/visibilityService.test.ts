@@ -119,8 +119,6 @@ describe('VisiblityService', () => {
             name: 'filter 1',
             type: 'type'
         };
-
-        // we assume that the implementation is correct if it works for one type and therfore only test the type 'class'
         it('should return elementIds for matching single type', async () => {
             const elements: Element[] = [
                 constructElement({ id: '1', type: 'Class' }),
@@ -511,7 +509,6 @@ describe('VisiblityService', () => {
     });
 
     describe('computeAffectedElementIdsForPatternFilter', () => {
-        // pattern filters can filter for "text" or "RegEx", we test both
         const filterBase: Omit<PatternFilter, 'pattern'> = {
             id: '1',
             name: 'filter 1',

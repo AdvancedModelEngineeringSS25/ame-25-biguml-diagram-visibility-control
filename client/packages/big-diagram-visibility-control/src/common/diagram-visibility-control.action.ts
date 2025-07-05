@@ -10,8 +10,6 @@
 import { type UMLSourceModel } from '@borkdominik-biguml/uml-protocol';
 import { Action, RequestAction, type ResponseAction } from '@eclipse-glsp/protocol';
 
-// ========= This action will be handled by the GLSP Client =========
-
 export interface RequestDiagramVisibilityControlAction extends RequestAction<DiagramVisibilityControlActionResponse> {
     kind: typeof RequestDiagramVisibilityControlAction.KIND;
     model: any | Readonly<UMLSourceModel> | undefined;
@@ -39,7 +37,6 @@ export namespace RequestDiagramVisibilityControlAction {
 export interface DiagramVisibilityControlActionResponse extends ResponseAction {
     kind: typeof DiagramVisibilityControlActionResponse.KIND;
     model: any | Readonly<UMLSourceModel> | undefined;
-    // model: ReturnType<ReturnType<ExperimentalGLSPServerModelState['getModelState']>['getSourceModel']>;
     selectedElementIds?: { id: string; name: string }[];
 }
 export namespace DiagramVisibilityControlActionResponse {
@@ -60,8 +57,6 @@ export namespace DiagramVisibilityControlActionResponse {
         };
     }
 }
-
-// === SEND VISIBLE ELEMENTS ACTION ===
 
 export interface RequestSendVisibleElementsAction extends RequestAction<SendVisibleElementsActionResponse> {
     kind: typeof RequestSendVisibleElementsAction.KIND;

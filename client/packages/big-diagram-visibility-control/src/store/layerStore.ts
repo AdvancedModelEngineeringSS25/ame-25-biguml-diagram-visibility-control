@@ -29,7 +29,6 @@ export interface LayerState {
     deleteSelectedElement: (layerId: string, filterId: string, elementId: string) => void;
 
     setConfiguration: (name: string) => void;
-    // getVisibleElementIds: () => string[];
     getModel: () => { layers: Layer[]; configuration: string };
 }
 
@@ -41,8 +40,6 @@ export const useLayerStore = create<LayerState>()(
 
             addLayer: () => {
                 const id = crypto.randomUUID();
-                // find max zIndex + 1 in the current layers
-                // if zIndex is set, use it
                 const name = `Layer ${get().layers.length + 1}`;
                 const zIndex = get().layers.length + 1; //TODO set highest value plus 1
                 const newLayer: Layer = {
@@ -167,22 +164,6 @@ export const useLayerStore = create<LayerState>()(
             },
 
             setConfiguration: name => set({ configuration: name }),
-
-            // getVisibleElementIds: () => {
-            //     const ordered = get()
-            //         .layers.filter(l => l.visible)
-            //         .sort((a, b) => a.zIndex - b.zIndex);
-
-            //     const ids = new Set<string>();
-            //     for (const layer of ordered) {
-            //         for (const f of layer.filters) {
-            //             if (f.type === 'selection') {
-            //                 (f as SelectionFilter).elements.forEach(id => ids.add(id));
-            //             }
-            //         }
-            //     }
-            //     return [...ids];
-            // },
 
             getModel: () => ({
                 layers: get().layers,

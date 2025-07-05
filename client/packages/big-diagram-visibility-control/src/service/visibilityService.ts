@@ -19,9 +19,6 @@ export class VisibilityService implements IVisibilityService {
 
         for (const layer of sortedLayers) {
             const layerElementIds = this.computeAffectedElementIdsForLayer(elements, layer);
-
-            // the layer with the highest z-index is responsible (layers are sorted by z-index)
-            // if we already saw the id the current layer is not responsible for handling it
             const affectedElementIds = layerElementIds.filter(elementId => !seenIds?.includes(elementId));
 
             seenIds.push(...layerElementIds);
@@ -57,8 +54,6 @@ export class VisibilityService implements IVisibilityService {
                 elementIds = affectedElementIds;
                 continue;
             }
-
-            // the layers are combined using logical AND (only intersection is returned)
             const overlappingElementIds = elementIds.filter(id => affectedElementIds.includes(id));
             return overlappingElementIds;
         }
@@ -113,7 +108,6 @@ export class VisibilityService implements IVisibilityService {
 
     private matchPattern(input: string): (text: string) => boolean {
         if (input.startsWith('/') && input.lastIndexOf('/') > 0) {
-            // Try to parse the regex
             const lastSlash = input.lastIndexOf('/');
             const pattern = input.slice(1, lastSlash);
             const flags = input.slice(lastSlash + 1);

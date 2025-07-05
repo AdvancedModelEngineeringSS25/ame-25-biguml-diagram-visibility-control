@@ -29,21 +29,6 @@ export function PatternFilterEditor({
                 value={filter.pattern}
             />
             <small style={{ marginBlockStart: '0.5em' }}>If your input starts with &apos;/&apos; it is parsed as RegEx</small> <br />
-            {/* <label>Types:</label>
-            <div>
-                {ALL_TYPES.map((type, index) => (
-                    <div key={index}>
-                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
-                            <BigCheckbox
-                                label=''
-                                value={(filter.types ?? []).includes(type)}
-                                onDidChangeValue={() => toggleSelectedType(layerId, filter.id, type)}
-                            />
-                            <span>{type}</span>
-                        </div>
-                    </div>
-                ))}
-            </div> */}
         </div>
     );
 }

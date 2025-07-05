@@ -41,15 +41,11 @@ export class AdvancedVisibilityService extends VisibilityService implements IVis
 
         const visibleElementIds: ElementId[] = [];
         const hiddenElementIds: ElementId[] = [];
-
-        // Sort layers by zIndex to determine the priority of layers
         const sortedLayers = layers.sort((a, b) => a.zIndex - b.zIndex);
 
         function isElementHandled(elementId: ElementId): boolean {
             return visibleElementIds.includes(elementId) || hiddenElementIds.includes(elementId);
         }
-
-        // Iterate through each layer to determine visibility
         for (const layer of sortedLayers) {
             if (!layer.active) continue; // Skip inactive layers
 
@@ -65,8 +61,6 @@ export class AdvancedVisibilityService extends VisibilityService implements IVis
                 }
             }
         }
-
-        // Add remaining elements that are not affected by any layer
         visibleElementIds.push(...allElements.filter(id => !isElementHandled(id)));
 
         return visibleElementIds;

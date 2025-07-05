@@ -80,17 +80,6 @@ export function LayerDetailsView({
             />
 
             <div style={{ marginTop: '12px', marginBottom: '12px' }}>
-                {/* <VSCodeDropdown
-                    value={layer.type}
-                    onChange={e => {
-                        const newValue = (e.target as HTMLSelectElement).value;
-                        changeLayerType(layer.id, newValue as Layer['type']);
-                    }}
-                >
-                    <span slot='indicator' className='codicon codicon-settings'></span>
-                    <VSCodeOption value='hide'>Hide</VSCodeOption>
-                    <VSCodeOption value='show'>Show</VSCodeOption>
-                </VSCodeDropdown> */}
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                     <vscode-label for='basic-textfield-01'>Type:</vscode-label>
                     <VSCodeRadioGroup
@@ -108,15 +97,6 @@ export function LayerDetailsView({
                         </VSCodeRadio>
                     </VSCodeRadioGroup>
                 </div>
-                {/* <VSCodeCheckbox
-                    checked={layer.type === 'show'}
-                    onChange={e => {
-                        const checked = (e.target as HTMLInputElement).checked;
-                        changeLayerType(layer.id, checked ? 'show' : 'hide');
-                    }}
-                >
-                    {layer.type === 'show' ? 'Show' : 'Hide'}
-                </VSCodeCheckbox> */}
             </div>
 
             <h3>Filters</h3>
