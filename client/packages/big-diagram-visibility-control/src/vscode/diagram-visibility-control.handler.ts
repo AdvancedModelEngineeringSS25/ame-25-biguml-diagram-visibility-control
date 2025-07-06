@@ -191,7 +191,7 @@ export class DiagramVisibilityControlActionHandler implements Disposable {
 
         const target: Element = {
             id: source.id,
-            type: type as Type, // TODO: fix this conversion
+            type: type as Type,
             children: [] as Element[]
         };
 

@@ -3,9 +3,9 @@
     {
       "id": "67731a21-aebc-4455-bdbc-980170460fff",
       "name": "Hide Layers with names that end with \"le\"",
-      "zIndex": 0,
-      "active": true,
+      "active": false,
       "type": "hide",
+      "zIndex": 0,
       "filters": [
         {
           "id": "20c17697-1764-442d-84d6-4cc095d02758",
@@ -19,9 +19,9 @@
     {
       "id": "0a413a50-177b-4fdd-8425-eb33b0595d50",
       "name": "Show layer with name \"LectureRepository\"",
-      "zIndex": 1,
-      "active": true,
+      "active": false,
       "type": "show",
+      "zIndex": 1,
       "filters": [
         {
           "id": "c81b01a1-05b4-49cb-9f46-8c5523f645f9",
@@ -35,7 +35,7 @@
     {
       "id": "f11b976b-d361-48c7-ba28-d8b1fd5cc032",
       "name": "Hide Properties of LectureService",
-      "active": true,
+      "active": false,
       "type": "hide",
       "zIndex": 2,
       "filters": [
@@ -55,7 +55,7 @@
     {
       "id": "6e4fcfa4-100c-4626-976d-6ed9da3a6b7c",
       "name": "Show LectureService",
-      "active": true,
+      "active": false,
       "type": "show",
       "zIndex": 3,
       "filters": [
@@ -75,9 +75,9 @@
     {
       "id": "c0c42530-e6ec-4871-b974-6779cdf4926e",
       "name": "Hide all Elements of type \"Interface\"",
-      "zIndex": 4,
-      "active": true,
+      "active": false,
       "type": "hide",
+      "zIndex": 4,
       "filters": [
         {
           "id": "9d701b46-be88-4ea4-94a7-ea18d75f7917",
